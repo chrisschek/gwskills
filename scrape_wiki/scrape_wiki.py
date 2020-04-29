@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import sys
+import contextlib
+import os
 
 
 base_url = 'https://wiki.guildwars.com'
@@ -144,6 +146,8 @@ def decorate_skills(all_skills_raw):
 
 def dump_to_json_file(all_skills):
   filename = 'all_skills.json'
+  with contextlib.suppress(FileNotFoundError):
+    os.remove(filename)
   with open(filename, 'w') as fp:
     json.dump(all_skills, fp)
   print("Dumped data to file: " + filename)
@@ -152,15 +156,18 @@ def test_skill(last_url_token):
   test_skill = {'name': 'test-run', 'url': 'https://wiki.guildwars.com/wiki/' + last_url_token}
   decorate_skill_info(test_skill)
   print(test_skill)
+  return test_skill
 
 
 if __name__ == '__main__':
   if len(sys.argv) > 1:
     # test mode
+    all_skills = []
     test_skill('Call_of_Elemental_Protection')
     test_skill('Arcane_Echo')
     test_skill('Brawling_Headbutt')
-    test_skill('Offering_of_Blood')
+    all_skills.append(test_skill('Offering_of_Blood'))
+    dump_to_json_file(all_skills)
     sys.exit()
 
   all_skills_raw = scrape_master_list()
