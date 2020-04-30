@@ -13,7 +13,8 @@ def check_request_succeeded(r):
     raise Exception('Request to [%s] returned status code [%s]' % (r.url, r.code))
 
 def scrape_master_list():
-  all_skills = []
+  # the master list contains some dupes, so use dict to dedupe
+  all_skills = {}
 
   url = base_url + '/wiki/List_of_all_skills'
   r = requests.get(url)
@@ -32,10 +33,11 @@ def scrape_master_list():
         'name': skill.attrs['title'],
         'url': base_url + skill.attrs['href'],
       }
-      all_skills.append(skill_info)
+      all_skills[skill_info['name']] = skill_info
   
-  print('Found %s total skills (including special non-usable skills)' % len(all_skills))
-  return all_skills
+  all_skills_list = list(all_skills.values())
+  print('Found %s total skills (including special non-usable skills)' % len(all_skills_list))
+  return all_skills_list
 
 def decorate_skill_info(skill_info):
   url = skill_info['url']
@@ -48,14 +50,19 @@ def decorate_skill_info(skill_info):
   # most other details in here
   infobox = skill_details_wrapper.parent if skill_details_wrapper else None
 
+  el_prof = infobox.find('a', title="Profession") if infobox else None
+  prof_val = el_prof.parent.next_sibling.next_sibling.contents[0].string if el_prof else None
+  el_attr = infobox.find('a', title="Attribute") if infobox else None
+  attr_val = el_attr.parent.next_sibling.next_sibling.contents[0].string if el_attr else None
+
   # ignore unusable/fake/etc. skills
-  is_a_skill = skill_details_wrapper != None and soup.find('dt', string='Concise description')
-  is_special = is_a_skill and (infobox.find('a', href="/wiki/Special_skill") and not infobox.find('a', title='Duplicate skill'))
+  is_special = infobox and (infobox.find('a', href="/wiki/Special_skill") and not infobox.find('a', title='Duplicate skill'))
   is_pvp_skill = '(PvP)' in skill_info['name']
   is_removed = soup.find('b', string='The information on this page does not apply to the game as it currently exists.') or soup.find('b', string='The information on this page does not apply to the game as it currently is or was.')
-  is_effect = '(item effect)' in skill_info['name'] or (infobox and infobox.find('a', href="/wiki/Party_bonus"))
+  is_tied_to_profession_or_reputation = prof_val in ['Warrior', 'Ranger', 'Necromancer', 'Elementalist', 'Mesmer', 'Monk', 'Assassin', 'Ritualist', 'Dervish', 'Paragon'] or attr_val in ['Lightbringer rank', 'Asura rank', 'Deldrimor rank', 'Ebon Vanguard rank', 'Norn rank']
+  is_title_effect = skill_info['name'] in ['Edification', 'Heart of the Norn', 'Lightbringer', 'Rebel Yell', 'Stout-Hearted']
 
-  if not is_a_skill or is_special or is_pvp_skill or is_removed or is_effect:
+  if not is_tied_to_profession_or_reputation or is_special or is_pvp_skill or is_removed or is_title_effect:
     print("Ignoring: " + skill_info['name'])
     return None
   else:
@@ -66,46 +73,30 @@ def decorate_skill_info(skill_info):
   skill_info['image_url'] = base_url + el_image.contents[0].contents[0].attrs['src']
 
   # profession
-  el_prof = infobox.find('a', title="Profession")
-  if el_prof == None:
-    skill_info['profession'] = None
-  else:
-    skill_info['profession'] = el_prof.parent.next_sibling.next_sibling.contents[0].string
+  skill_info['profession'] = prof_val
 
   # campaign
   el_campaign = infobox.find('a', title="Campaign")
-  if el_campaign == None:
-    skill_info['campaign'] = None
-  else:
-    skill_info['campaign'] = el_campaign.parent.next_sibling.next_sibling.contents[0].string
+  campaign_val = el_campaign.parent.next_sibling.next_sibling.contents[0].string if el_campaign else None
+  skill_info['campaign'] = campaign_val
 
   # attribute
-  el_attr = infobox.find('a', title="Attribute")
-  if el_attr == None:
-    skill_info['attribute'] = None
-  else:
-    skill_info['attribute'] = el_attr.parent.next_sibling.next_sibling.contents[0].string
+  skill_info['attribute'] = attr_val
 
   # energy cost
   el_energy = skill_details_wrapper.find('a', title="Energy")
-  if el_energy == None:
-    skill_info['energy'] = None
-  else:
-    skill_info['energy'] = el_energy.parent.text.strip()
+  energy_val = el_energy.parent.text.strip() if el_energy else None
+  skill_info['energy'] = energy_val
 
   # adrenaline cost
-  el_adren = skill_details_wrapper.find('a', title="Adrenaline")
-  if el_adren == None:
-    skill_info['adrenaline'] = None
-  else:
-    skill_info['adrenaline'] = el_adren.parent.text.strip()
-
+  el_adrenaline = skill_details_wrapper.find('a', title="Adrenaline")
+  adrenaline_val = el_adrenaline.parent.text.strip() if el_adrenaline else None
+  skill_info['adrenaline'] = adrenaline_val
+  
   # sacrifice cost
-  el_sac = skill_details_wrapper.find('a', title="Sacrifice")
-  if el_sac == None:
-    skill_info['sacrifice'] = None
-  else:
-    skill_info['sacrifice'] = el_sac.parent.text.strip()
+  el_sacrifice = skill_details_wrapper.find('a', title="Sacrifice")
+  sacrifice_val = el_sacrifice.parent.text.strip() if el_sacrifice else None
+  skill_info['sacrifice'] = sacrifice_val
   
   # activation time
   el_activ = skill_details_wrapper.find('a', title="Activation")
@@ -119,11 +110,9 @@ def decorate_skill_info(skill_info):
       skill_info['activation_time'] = el_activ.parent.text.strip()
 
   # recharge time
-  el_recharge = skill_details_wrapper.find('a', title="Recharge")
-  if el_recharge == None:
-    skill_info['recharge_time'] = None
-  else:
-    skill_info['recharge_time'] = el_recharge.parent.text.strip()
+  el_recharge_time = skill_details_wrapper.find('a', title="Recharge")
+  recharge_time_val = el_recharge_time.parent.text.strip() if el_recharge_time else None
+  skill_info['recharge_time'] = recharge_time_val
 
   # description
   el_desc = soup.find('dt', string='Concise description').parent.parent.contents[2:]
