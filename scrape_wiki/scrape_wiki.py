@@ -1,3 +1,10 @@
+"""Scrape Wiki
+
+Script that scrapes the GWW for skill data and dumps it to a JSON file.
+
+TODO: coerce the 'profession' of common skills to be 'Common'
+"""
+
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -56,8 +63,8 @@ def decorate_skill_info(skill_info):
   attr_val = el_attr.parent.next_sibling.next_sibling.contents[0].string if el_attr else None
 
   # ignore unusable/fake/etc. skills
-  is_special = infobox and (infobox.find('a', href="/wiki/Special_skill") and not infobox.find('a', title='Duplicate skill'))
-  is_pvp_skill = '(PvP)' in skill_info['name']
+  is_special = infobox and (infobox.find('a', href="/wiki/Special_skill") and not infobox.find('a', title='Duplicate skill')) and not infobox.find('a', title='Resurrection skill')
+  is_pvp_skill = '(PvP)' in skill_info['name'] or '(Codex)' in skill_info['name']
   is_removed = soup.find('b', string='The information on this page does not apply to the game as it currently exists.') or soup.find('b', string='The information on this page does not apply to the game as it currently is or was.')
   is_tied_to_profession_or_reputation = prof_val in ['Warrior', 'Ranger', 'Necromancer', 'Elementalist', 'Mesmer', 'Monk', 'Assassin', 'Ritualist', 'Dervish', 'Paragon'] or attr_val in ['Lightbringer rank', 'Asura rank', 'Deldrimor rank', 'Ebon Vanguard rank', 'Norn rank']
   is_title_effect = skill_info['name'] in ['Edification', 'Heart of the Norn', 'Lightbringer', 'Rebel Yell', 'Stout-Hearted']
