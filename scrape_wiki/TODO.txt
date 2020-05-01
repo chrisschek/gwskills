@@ -1,0 +1,3 @@
+* don't include base_url in all the url's in the file. instead, include a base_url in the json (like {"base_url":"...", "all_skills":[...]} )
+* include Rez sig and Sig of capture (in a special section separated from all skills probably)
+* possibly also include Charm Animal or Comfort Animal in the same section as Rez Sig. like a "always have these skills" section
