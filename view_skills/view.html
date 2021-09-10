@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>gwskills mockup</title>
+        <title>gwskills</title>
         <link rel="stylesheet" href="my_styles.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="my_scripts.js"></script>
     </head>
     <body>
-        <h1>gwskills mockup</h1>
-        <p>A totally static mockup.</p>
+        <h1>gwskills</h1>
+        <p>Random skill set generator</p>
         
         <hr>
 
+        <!-- Table filters. Need to figure out how to implement these later -->
         <div>
             <table style="margin:auto">
                 <tr>
@@ -31,8 +34,8 @@
 
         <hr>
 
-
-        <table style="width:100%">
+        <!-- Skills table -->
+        <table id="skills-table" style="width:100%">
             <tr>
                 <th>Icon</th>
                 <th>Name</th>
@@ -40,22 +43,6 @@
                 <th>Costs</th>
                 <th>Attribute</th>
                 <th>Campaign</th>
-            </tr>
-            <tr class="warrior-tint">
-                <td><img src="https://wiki.guildwars.com/images/f/f5/%22Fear_Me%21%22.jpg"/></td>
-                <td><a href="https://wiki.guildwars.com/wiki/%22Fear_Me!%22">"Fear Me!"</a></td>
-                <td>Shout. You have +5...25...30% chance of a critical hit with melee attacks against stationary foes. Initial effect: nearby foes lose 1...3...4 Energy.</td>
-                <td>4 <img src="static/Tango-adrenaline.png" class="tango"/> 7 <img src="static/Tango-recharge-darker.png" class="tango"/></td>
-                <td>Tactics</td>
-                <td>Prophecies</td>
-            </tr>
-            <tr class="necromancer-tint">
-                <td><img src="https://wiki.guildwars.com/images/a/ab/Animate_Bone_Minions.jpg"/></td>
-                <td><a href="https://wiki.guildwars.com/wiki/Animate_Bone_Minions">Animate Bone Minions</a></td>
-                <td>Spell. Creates two level 0...10...12 bone minions. Exploits a fresh Corpse.</td>
-                <td>15 <img src="static/Tango-energy.png" class="tango"/> 2 <img src="static/Tango-activation-darker.png" class="tango"/> 5 <img src="static/Tango-recharge-darker.png" class="tango"/></td>
-                <td>Death Magic</td>
-                <td>Core</td>
             </tr>
         </table>
     </body>

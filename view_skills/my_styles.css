@@ -1,0 +1,12 @@
+.tango {
+    position: relative;
+    top: 5px;
+}
+
+.warrior-tint {
+    background-color: #FFFFCC;
+}
+
+.necromancer-tint {
+    background-color: #CCFFCC;
+}
