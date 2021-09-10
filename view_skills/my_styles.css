@@ -1,12 +1,126 @@
+body {
+    background-color: #DEDEEE;
+}
+
 .tango {
     position: relative;
     top: 5px;
 }
 
-.warrior-tint {
+.table-filters-element {
+    padding: 0px 6px 5px;
+}
+
+#skills-table-container {
+    padding: 40px 30px 30px;
+}
+
+#skills-table {
+    background-color: #EEEEEE;
+
+    width: 100%;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #999999;
+}
+
+#skills-table-header-row {
+    /* border-style: solid;
+    border-width: 1px; */
+}
+
+.skills-table-header-cell {
+    /* border-style: solid;
+    border-width: 1px; */
+}
+
+thead .sorting {
+    background-image: url(static/sort_both.svg);
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-right: 21px;
+}
+
+thead .sorting_asc {
+    background-image: url(static/sort_up.svg);
+}
+
+thead .sorting_desc {
+    background-image: url(static/sort_down.svg);
+}
+
+thead .sorting_disabled {
+    background-image: none;
+}
+
+.center-icon {
+    display: block;
+    margin: auto;
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    /* width: 50%; */
+  }
+
+.skill-name {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.skill-name:hover {
+    text-decoration: underline;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.skills-table-cell {
+    text-align: center;
+    padding: 5px;
+}
+
+.row-warrior {
     background-color: #FFFFCC;
 }
 
-.necromancer-tint {
+.row-ranger {
+    background-color: #EEFFCC;
+}
+
+.row-monk {
+    background-color: #CCEEFF;
+}
+
+.row-necromancer {
     background-color: #CCFFCC;
+}
+
+.row-mesmer {
+    background-color: #EEDDFF;
+}
+
+.row-elementalist {
+    background-color: #FFDDDD;
+}
+
+.row-assassin {
+    background-color: #FFEEFF;
+}
+
+.row-ritualist {
+    background-color: #DDFFFF;
+}
+
+.row-paragon {
+    background-color: #FFEECC;
+}
+
+.row-dervish {
+    background-color: #EEEEFF;
+}
+
+.row-common {
+    background-color: #EEEEEE;
 }

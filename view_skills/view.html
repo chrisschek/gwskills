@@ -2,9 +2,19 @@
 <html>
     <head>
         <title>gwskills</title>
-        <link rel="stylesheet" href="my_styles.css"/>
+
+        <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- DataTables for sortable tables -->
+        <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css"/> -->
+        <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+
+        <!-- My Stuff -->
+        <link rel="stylesheet" href="my_styles.css"/>
         <script src="my_scripts.js"></script>
+        <script src="test_skills_json.js"></script>
+        <!-- <script src="all_skills_json.js"></script> -->
     </head>
     <body>
         <h1>gwskills</h1>
@@ -13,21 +23,21 @@
         <hr>
 
         <!-- Table filters. Need to figure out how to implement these later -->
-        <div>
+        <div id="table-filters">
             <table style="margin:auto">
                 <tr>
-                    <th><img src="static/Tango-quest-icon.png" class="tango"/> All</th>
-                    <th><img src="static/Warrior-tango-icon-20.png" class="tango"/> Warrior</th>
-                    <th><img src="static/Ranger-tango-icon-20.png" class="tango"/> Ranger</th>
-                    <th><img src="static/Monk-tango-icon-20.png" class="tango"/> Monk</th>
-                    <th><img src="static/Necromancer-tango-icon-20.png" class="tango"/> Necromancer</th>
-                    <th><img src="static/Mesmer-tango-icon-20.png" class="tango"/> Mesmer</th>
-                    <th><img src="static/Elementalist-tango-icon-20.png" class="tango"/> Elementalist</th>
-                    <th><img src="static/Assassin-tango-icon-20.png" class="tango"/> Assassin</th>
-                    <th><img src="static/Ritualist-tango-icon-20.png" class="tango"/> Ritualist</th>
-                    <th><img src="static/Paragon-tango-icon-20.png" class="tango"/> Paragon</th>
-                    <th><img src="static/Dervish-tango-icon-20.png" class="tango"/> Dervish</th>
-                    <th><img src="static/Any-tango-icon-20.png" class="tango"/> Common</th>
+                    <th class="table-filters-element"><img src="static/Tango-quest-icon.png" class="tango"/> All</th>
+                    <th class="table-filters-element"><img src="static/Warrior-tango-icon-20.png" class="tango"/> Warrior</th>
+                    <th class="table-filters-element"><img src="static/Ranger-tango-icon-20.png" class="tango"/> Ranger</th>
+                    <th class="table-filters-element"><img src="static/Monk-tango-icon-20.png" class="tango"/> Monk</th>
+                    <th class="table-filters-element"><img src="static/Necromancer-tango-icon-20.png" class="tango"/> Necromancer</th>
+                    <th class="table-filters-element"><img src="static/Mesmer-tango-icon-20.png" class="tango"/> Mesmer</th>
+                    <th class="table-filters-element"><img src="static/Elementalist-tango-icon-20.png" class="tango"/> Elementalist</th>
+                    <th class="table-filters-element"><img src="static/Assassin-tango-icon-20.png" class="tango"/> Assassin</th>
+                    <th class="table-filters-element"><img src="static/Ritualist-tango-icon-20.png" class="tango"/> Ritualist</th>
+                    <th class="table-filters-element"><img src="static/Paragon-tango-icon-20.png" class="tango"/> Paragon</th>
+                    <th class="table-filters-element"><img src="static/Dervish-tango-icon-20.png" class="tango"/> Dervish</th>
+                    <th class="table-filters-element"><img src="static/Any-tango-icon-20.png" class="tango"/> Common</th>
                 </tr>
             </table>
         </div>
@@ -35,15 +45,22 @@
         <hr>
 
         <!-- Skills table -->
-        <table id="skills-table" style="width:100%">
-            <tr>
-                <th>Icon</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Costs</th>
-                <th>Attribute</th>
-                <th>Campaign</th>
-            </tr>
-        </table>
+        <div id="skills-table-container">
+            <table id="skills-table">
+                <thead>
+                    <tr id="skills-table-header-row">
+                        <th class="skills-table-header-cell">Icon</th>
+                        <th class="skills-table-header-cell">Name</th>
+                        <th class="skills-table-header-cell">Description</th>
+                        <th class="skills-table-header-cell">Costs</th>
+                        <th class="skills-table-header-cell">Attribute</th>
+                        <th class="skills-table-header-cell">Campaign</th>
+                    </tr>
+                    <!-- <tr>
+                        <td colspan="100%" style="border-bottom:solid 1px #999999;"></td> 
+                    </tr> -->
+                </thead>
+            </table>
+        </div>
     </body>
 </html>

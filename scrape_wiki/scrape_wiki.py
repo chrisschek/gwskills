@@ -3,6 +3,9 @@
 Script that scrapes the GWW for skill data and dumps it to a JSON file.
 
 TODO: coerce the 'profession' of common skills to be 'Common'
+TODO: descriptions sometimes include links that are broken (eg. see "Charge!")
+TODO: descriptions are prepended with newline character; must delete because is useless & breaks javascript JSON parsing
+TODO: need to triple-escape quote characters like in Shout names because breaks javascript JSON parsing
 """
 
 import requests
