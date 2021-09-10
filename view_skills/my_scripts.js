@@ -19,6 +19,14 @@ const PROF = {
     null: { 'name': 'Common', 'class': 'row-com', },
 };
 
+const CAMP = {
+    'cor': 'Core',
+    'pro': 'Prophecies',
+    'fac': 'Factions',
+    'nig': 'Nightfall',
+    'eye': 'Eye of the North',
+};
+
 ///////////////////////
 /////////////////////// Randomization
 ///////////////////////
@@ -31,12 +39,51 @@ var filters = {
 }
 
 var autoinclude = [
-    'Resurrection Signet',
-    'Comfort Animal',
+    // These are indices in the master skill list
+    1316, // Resurrection Signet
+    70, // Comfort Animal
 ]
 
 function generateRandomSkillPool(poolSize, filters, autoinclude) {
+    // Return value. An array of skill id's
+    const randomizedSkillPool = [];
 
+    // Source: https://stackoverflow.com/a/12646864
+    let shuffleArray = function(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    };
+
+    // Shuffle the order of the master skill list. Just contains id's (indices of the actual master list).
+    let masterSkillPool = Array(SKILL_MASTER_COUNT);
+    for (let i = 0; i < SKILL_MASTER_COUNT; i++) {
+        masterSkillPool[i] = i;
+    }
+    shuffleArray(masterSkillPool);
+
+    // Add autoincluded skills
+    for (let skillId of autoinclude) {
+        randomizedSkillPool.push(skillId);
+    }
+
+    // Move skill id's from shuffled master list to the randomizedSkillPool, while checking against filters
+    let isSkillAllowed = function(skillId) {
+        // TODO implement me
+        return true;
+    };
+    for (let skillId of masterSkillPool) {
+        if (randomizedSkillPool.length >= poolSize) {
+            break;
+        }
+        if (!autoinclude.includes(skillId) && isSkillAllowed(skillId)) {
+            randomizedSkillPool.push(skillId);
+        }
+    }
+
+    console.log('Randomized skill pool (id\'s): ' + randomizedSkillPool);
+    return randomizedSkillPool;
 }
 
 
@@ -44,15 +91,16 @@ function generateRandomSkillPool(poolSize, filters, autoinclude) {
 /////////////////////// Table creation
 ///////////////////////
 
-function constructTable(tableSelector, skillList) {
+function constructTable(tableSelector, skillIdList) {
 
     var table = $(tableSelector);
 
     var tbody = $('<tbody/>');
     table.append(tbody);
 
-    for (var i = 0; i < skillList.length; i++) {
-        var skill = skillList[i];
+    for (var i = 0; i < skillIdList.length; i++) {
+        var skillId = skillIdList[i];
+        var skill = SKILL_MASTER_LIST[skillId];
         // console.log('Adding skill: ' + skill.name);
 
         var row = $('<tr/>');
@@ -120,15 +168,15 @@ function createAttributeCell(skill) {
 }
 
 function createCampaignCell(skill) {
-    var campaign = skill.camp;
+    var campaign = CAMP[skill.camp];
     return $('<td/>').html(campaign).addClass('skills-table-cell');
 }
 
 ///////////////////////
-/////////////////////// Filters
+/////////////////////// Table Filters
 ///////////////////////
 
-function enableFilterButtons() {
+function enableTableFilterButtons() {
     $('#filter-all').click(function(){
         console.log('Doing filter-all');
         for (var key in PROF) {
@@ -164,7 +212,7 @@ var skillsTable;
 $(document).ready(function(){
 
     console.log('Starting JSON parse & skills-table creation');
-    var skillsList = SKILL_LIST_MASTER;
+    var skillsList = generateRandomSkillPool(10, filters, autoinclude);
     constructTable('#skills-table', skillsList);
     console.log('Finished creating table');
 
@@ -180,7 +228,7 @@ $(document).ready(function(){
     });
     console.log('Finished DataTable creation');
 
-    enableFilterButtons();
+    enableTableFilterButtons();
 });
 
 
