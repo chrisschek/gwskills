@@ -1,5 +1,6 @@
 body {
     background-color: #DEDEEE;
+    font-family: sans-serif;
 }
 
 .tango {
@@ -9,10 +10,13 @@ body {
 
 .table-filters-element {
     padding: 0px 6px 5px;
+    font-weight: bold;
+    color: #0000EE;
+    cursor: pointer;
 }
 
 #skills-table-container {
-    padding: 40px 30px 30px;
+    padding: 25px 30px 30px;
 }
 
 #skills-table {
@@ -23,16 +27,6 @@ body {
     border-style: solid;
     border-width: 1px;
     border-color: #999999;
-}
-
-#skills-table-header-row {
-    /* border-style: solid;
-    border-width: 1px; */
-}
-
-.skills-table-header-cell {
-    /* border-style: solid;
-    border-width: 1px; */
 }
 
 thead .sorting {
@@ -81,46 +75,46 @@ thead .sorting_disabled {
     padding: 5px;
 }
 
-.row-warrior {
+.row-war {
     background-color: #FFFFCC;
 }
 
-.row-ranger {
+.row-ran {
     background-color: #EEFFCC;
 }
 
-.row-monk {
+.row-mon {
     background-color: #CCEEFF;
 }
 
-.row-necromancer {
+.row-nec {
     background-color: #CCFFCC;
 }
 
-.row-mesmer {
+.row-mes {
     background-color: #EEDDFF;
 }
 
-.row-elementalist {
+.row-ele {
     background-color: #FFDDDD;
 }
 
-.row-assassin {
+.row-ass {
     background-color: #FFEEFF;
 }
 
-.row-ritualist {
+.row-rit {
     background-color: #DDFFFF;
 }
 
-.row-paragon {
+.row-par {
     background-color: #FFEECC;
 }
 
-.row-dervish {
+.row-der {
     background-color: #EEEEFF;
 }
 
-.row-common {
+.row-com {
     background-color: #EEEEEE;
 }

@@ -1,43 +1,3 @@
-
-var skills_list = [
-    {
-        "name": "Order of the Vampire",
-        "url": "https://wiki.guildwars.com/wiki/Order_of_the_Vampire",
-        "image_url": "https://wiki.guildwars.com/images/3/39/Order_of_the_Vampire.jpg",
-        "profession": "Necromancer",
-        "campaign": "Prophecies",
-        "attribute": "Blood Magic",
-        "energy": "5",
-        "adrenaline": null,
-        "sacrifice": "17%",
-        "activation_time": "2",
-        "recharge_time": "5",
-        "description": "\nElite Enchantment Spell. Enchants all party members (5 seconds.) These party members steal <span style=\"color: green; font-weight: bold;\">3...13...16</span> Health with each physical damage attack. <span style=\"color: #808080;\">Party members under another Necromancer enchantment are not affected.</span>"
-    },
-    {
-        "name": "Orison of Healing",
-        "url": "https://wiki.guildwars.com/wiki/Orison_of_Healing",
-        "image_url": "https://wiki.guildwars.com/images/5/5f/Orison_of_Healing.jpg",
-        "profession": "Monk",
-        "campaign": "Core",
-        "attribute": "Healing Prayers",
-        "energy": "5",
-        "adrenaline": null,
-        "sacrifice": null,
-        "activation_time": "1",
-        "recharge_time": "2",
-        "description": "\nSpell. Heals for <span style=\"color: green; font-weight: bold;\">20...60...70</span>."
-    }
-];
-
-const SKILLS_FILE = 'test_skills.json';
-
-// const TAG_TANGO_SACRIFICE = $('<img/>').attr('src', 'static/Tango-sacrifice.png').addClass('tango');
-// const TAG_TANGO_ADRENALINE = $('<img/>').attr('src', 'static/Tango-adrenaline.png').addClass('tango');
-// const TAG_TANGO_ENERGY = $('<img/>').attr('src', 'static/Tango-energy.png').addClass('tango');
-// const TAG_TANGO_ACTIVATION = $('<img/>').attr('src', 'static/Tango-activation-darker.png').addClass('tango');
-// const TAG_TANGO_RECHARGE = $('<img/>').attr('src', 'static/Tango-recharge-darker.png').addClass('tango');
-
 const TAG_TANGO_SACRIFICE = '<img src="static/Tango-sacrifice.png" class="tango"/>';
 const TAG_TANGO_ADRENALINE = '<img src="static/Tango-adrenaline.png" class="tango"/>';
 const TAG_TANGO_ENERGY = '<img src="static/Tango-energy.png" class="tango"/>';
@@ -45,38 +5,25 @@ const TAG_TANGO_ACTIVATION = '<img src="static/Tango-activation-darker.png" clas
 const TAG_TANGO_RECHARGE = '<img src="static/Tango-recharge-darker.png" class="tango"/>';
 
 const PROF_TO_CSS_CLASS = {
-    'Warrior': 'row-warrior',
-    'Ranger': 'row-ranger',
-    'Monk': 'row-monk',
-    'Necromancer': 'row-necromancer',
-    'Mesmer': 'row-mesmer',
-    'Elementalist': 'row-elementalist',
-    'Assassin': 'row-assassin',
-    'Ritualist': 'row-ritualist',
-    'Paragon': 'row-paragon',
-    'Dervish': 'row-dervish',
-    'Common': 'row-common',
-    null: 'row-common',
+    'Warrior': 'row-war',
+    'Ranger': 'row-ran',
+    'Monk': 'row-mon',
+    'Necromancer': 'row-nec',
+    'Mesmer': 'row-mes',
+    'Elementalist': 'row-ele',
+    'Assassin': 'row-ass',
+    'Ritualist': 'row-rit',
+    'Paragon': 'row-par',
+    'Dervish': 'row-der',
+    'Common': 'row-com',
+    null: 'row-com',
 };
 
+///////////////////////
+/////////////////////// Table creation
+///////////////////////
+
 function constructTable(tableSelector, list) {
-
-    // // Traversing the JSON data
-    // for (var i = 0; i < list.length; i++) {
-    //     var row = $('<tr/>');   
-    //     for (var colIndex = 0; colIndex < cols.length; colIndex++)
-    //     {
-    //         var val = list[i][cols[colIndex]];
-
-    //         // If there is any key, which is matching
-    //         // with the column name
-    //         if (val == null) val = "";  
-    //             row.append($('<td/>').html(val));
-    //     }
-
-    //     // Adding each row to the table
-    //     $(table_selector).append(row);
-    // }
 
     var table = $(tableSelector);
 
@@ -154,22 +101,61 @@ function createCampaignCell(skillObj) {
     return $('<td/>').html(campaign).addClass('skills-table-cell');
 }
 
+///////////////////////
+/////////////////////// Filters
+///////////////////////
+
+function enableFilterButtons() {
+    $('#filter-all').click(function(){
+        console.log('Doing filter-all');
+        for (var key in PROF_TO_CSS_CLASS) {
+            var className = PROF_TO_CSS_CLASS[key];
+            $('.' + className).show();
+        }
+    });
+
+    let hideAllFilterTypes = function() {
+        for (var key in PROF_TO_CSS_CLASS) {
+            var className = PROF_TO_CSS_CLASS[key];
+            $('.' + className).hide();
+        }
+    }
+
+    var filterTypes = ['war', 'ran', 'mon', 'nec', 'mes', 'ele', 'ass', 'rit', 'par', 'der', 'com'];
+
+    for (let filterType of filterTypes) {
+        $('#filter-' + filterType).click(function(){
+            console.log('Doing filter-' + filterType);
+            hideAllFilterTypes();
+            $('.row-' + filterType).show();
+        });
+    }
+}
+
+///////////////////////
+/////////////////////// Document ready function
+///////////////////////
+
+var skillsTable;
 
 $(document).ready(function(){
 
-    console.log('Starting JSON parse & skills-table creation')
-    var allSkillsList = JSON.parse(allSkillsJson)
-    constructTable('#skills-table', allSkillsList)
-    console.log('Finished creating table')
+    console.log('Starting JSON parse & skills-table creation');
+    var allSkillsList = JSON.parse(allSkillsJson);
+    constructTable('#skills-table', allSkillsList);
+    console.log('Finished creating table');
 
-    $('#skills-table').DataTable({
+    console.log('Starting DataTable creation');
+    skillsTable = $('#skills-table').DataTable({
         paging: false,
         columnDefs: [
             // Disables features on first column ('Icon' column)
             { targets: 0, orderable: false, searchable: false }
           ]
     });
+    console.log('Finished DataTable creation');
 
+    enableFilterButtons();
 });
 
 
