@@ -5,18 +5,17 @@ const TAG_TANGO_ACTIVATION = '<img src="static/Tango-activation-darker.png" clas
 const TAG_TANGO_RECHARGE = '<img src="static/Tango-recharge-darker.png" class="tango"/>';
 
 const PROF = {
-    'war': { 'name': 'Warrior', 'class': 'row-war', },
-    'ran': { 'name': 'Ranger', 'class': 'row-ran', },
-    'mon': { 'name': 'Monk', 'class': 'row-mon', },
-    'nec': { 'name': 'Necromancer', 'class': 'row-nec', },
-    'mes': { 'name': 'Mesmer', 'class': 'row-mes', },
-    'ele': { 'name': 'Elementalist', 'class': 'row-ele', },
-    'ass': { 'name': 'Assassin', 'class': 'row-ass', },
-    'rit': { 'name': 'Ritualist', 'class': 'row-rit', },
-    'par': { 'name': 'Paragon', 'class': 'row-par', },
-    'der': { 'name': 'Dervish', 'class': 'row-der', },
-    'com': { 'name': 'Common', 'class': 'row-com', },
-    null: { 'name': 'Common', 'class': 'row-com', },
+    'war': { 'id': 0, 'name': 'Warrior', 'class': 'row-war', },
+    'ran': { 'id': 1, 'name': 'Ranger', 'class': 'row-ran', },
+    'mon': { 'id': 2, 'name': 'Monk', 'class': 'row-mon', },
+    'nec': { 'id': 3, 'name': 'Necromancer', 'class': 'row-nec', },
+    'mes': { 'id': 4, 'name': 'Mesmer', 'class': 'row-mes', },
+    'ele': { 'id': 5, 'name': 'Elementalist', 'class': 'row-ele', },
+    'ass': { 'id': 6, 'name': 'Assassin', 'class': 'row-ass', },
+    'rit': { 'id': 7, 'name': 'Ritualist', 'class': 'row-rit', },
+    'par': { 'id': 8, 'name': 'Paragon', 'class': 'row-par', },
+    'der': { 'id': 9, 'name': 'Dervish', 'class': 'row-der', },
+    'com': { 'id': 10, 'name': 'Common', 'class': 'row-com', },
 };
 
 const CAMP = {
@@ -68,11 +67,23 @@ function generateRandomSkillPool(poolSize, filters, autoinclude) {
         randomizedSkillPool.push(skillId);
     }
 
-    // Move skill id's from shuffled master list to the randomizedSkillPool, while checking against filters
+    // isSkillAllowed checks a skill against filters
     let isSkillAllowed = function(skillId) {
-        // TODO implement me
-        return true;
+        let skill = SKILL_MASTER_LIST[skillId];
+        if (filters.name.includes(skill.name)) {
+            return false;
+        } else if (filters.camp.includes(skill.camp)) {
+            return false;
+        } else if (filters.prof.includes(skill.prof)) {
+            return false;
+        } else if (filters.attr.includes(skill.attr)) {
+            return false;
+        } else {
+            return true;
+        }
     };
+
+    // Move skill id's from shuffled master list to the randomizedSkillPool to create a smaller randomized list
     for (let skillId of masterSkillPool) {
         if (randomizedSkillPool.length >= poolSize) {
             break;
@@ -106,6 +117,7 @@ function constructTable(tableSelector, skillIdList) {
         var row = $('<tr/>');
         row.addClass(PROF[skill.prof]['class']);
 
+        row.append(createProfessionCell(skill));
         row.append(createIconCell(skill));
         row.append(createNameCell(skill));
         row.append(createDescriptionCell(skill));
@@ -115,6 +127,12 @@ function constructTable(tableSelector, skillIdList) {
 
         tbody.append(row);
     }
+}
+
+function createProfessionCell(skill) {
+    // This will be a hidden column with ID's to enforce a specific ordering
+    var profId = PROF[skill.prof]['id'];
+    return $('<td/>').html(profId);
 }
 
 function createIconCell(skill) {
@@ -212,34 +230,30 @@ var skillsTable;
 $(document).ready(function(){
 
     console.log('Starting JSON parse & skills-table creation');
-    var skillsList = generateRandomSkillPool(10, filters, autoinclude);
+    var skillsList = generateRandomSkillPool(50, filters, autoinclude);
     constructTable('#skills-table', skillsList);
     console.log('Finished creating table');
 
     console.log('Starting DataTable creation');
+    // https://datatables.net/index
     skillsTable = $('#skills-table').DataTable({
         paging: false,
         columnDefs: [
-            // Disables features on zeroth column ('Icon' column)
-            { targets: 0, orderable: false, searchable: false },
-            // Disables features on third column ('Costs' column)
-            { targets: 3, orderable: false, searchable: false },
-          ]
+            // Hide Profession column
+            { targets: 0, visible: false },
+            // Disables features on 'Icon' column
+            { targets: 1, orderable: false, searchable: false },
+            // Disables features on 'Costs' column
+            { targets: 4, orderable: false, searchable: false },
+        ],
+        // Always keep things sorted by profession
+        orderFixed: [ 0, 'asc' ],
+        // Initial ordering by attribute, then name
+        order: [[5, 'asc'], [ 2, 'asc' ]],
     });
     console.log('Finished DataTable creation');
 
     enableTableFilterButtons();
 });
-
-
-// Table sorting possibility:
-// https://datatables.net/index
-
-// Here's a way to do filters: hide/show each of the ".warrior-tint" or whatever classes to hide/show rows
-// eg.
-//   $('.warrior-tint').hide();
-// maybe rename to: $('.row-warrior').hide();
-// and of course use show() to show
-// https://www.w3schools.com/jquery/jquery_hide_show.asp
 
 // Would be nice to add an "elite":true/false to the JSON, then use that to make elites stand out more in the table
