@@ -16,13 +16,44 @@
         <script src="master_skill_list.js"></script>
     </head>
     <body>
-        <h1>gwskills</h1>
-        <p>Random skill set generator</p>
-        
-        <hr>
+        <div id="header-container-outer">
+            <div style="display:flex;flex-direction:row;">
+                <img src="static/gw-helmet.png" id="title-icon"/>
+                <h1>Guild Wars Skill Pool Randomizer</h1>
+            </div>
+            <div id="header-container-inner">
+                <div id="header-main">
+                    <div id="header-info-section">
+                        <p>Placeholder text, probably explain how it works here. Maybe work an icon/picture into here. Filling up the rest of the line with lots of text just to test how wrapping works and make this look slightly more realistic I hope. Basically this is a lorem ipsum but I'm just typing random stuff so yeah. Here's some more text. Hope it looks ok. Okay.</p>
+                    </div>
+                    <div id="header-skillpool-generator">
+                        <h4>Generate new skill pool</h4>
+                        <p>Placeholder text<br>Placeholder text<br>Placeholder text</p>
+                        <div class="slidecontainer" style="display:flex;flex-direction:row;">
+                            <span>Number of skills:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <span style="font-family:monospace;font-size:large;">0%</span>
+                            <span>
+                                <input type="range" min="0" max="100" value="50" class="slider" id="skillcount-slider"/>
+                            </span>
+                            <span style="font-family:monospace;font-size:large;">100%</span>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Selected:&nbsp;&nbsp;&nbsp;</span>
+                            <span style="font-family:monospace;font-size:large;", id="skillcount-slider-selected-number">uninitialized</span>
+                        </div>
+                        <button id="generate">Generate New Skill Pool</button>
+                    </div>
+                </div>
+                <div id="header-right-sidebar">
+                    <h4>Skill pool codes</h4>
+                    <p>Each skill pool has a unique code that you can use to reload the skill pool in this page. Simply copy the code into the URL or text box or whatever, I haven't implemented this yet.</p>
+                    <p>Current skill pool code:</p>
+                    <p id="skill-pool-code">No skill pool loaded</p>
+                </div>
+            </div>
+        </div>
 
         <!-- Table filters. Need to figure out how to implement these later -->
         <div id="table-filters">
+            <hr>
             <table style="margin:auto">
                 <tr>
                     <th id="filter-all" class="table-filters-element"><img src="static/Tango-quest-icon.png" class="tango"/> All</th>
@@ -39,9 +70,8 @@
                     <th id="filter-com" class="table-filters-element"><img src="static/Any-tango-icon-20.png" class="tango"/><a> Common</a></th>
                 </tr>
             </table>
+            <hr>
         </div>
-
-        <hr>
 
         <!-- Skills table -->
         <div id="skills-table-container">
@@ -60,6 +90,7 @@
                         <td colspan="100%" style="border-bottom:solid 1px #999999;"></td> 
                     </tr> -->
                 </thead>
+                <tbody></tbody>
             </table>
         </div>
     </body>

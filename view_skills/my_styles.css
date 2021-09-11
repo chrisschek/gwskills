@@ -8,6 +8,47 @@ body {
     top: 5px;
 }
 
+img#title-icon {
+    height: 100px;
+    width: auto;
+    margin-right: -5px;
+    position: relative;
+    top: -20px;
+    left: -10px;
+}
+
+div#header-container-outer {
+    margin: 8vh 6vw 30px;
+}
+
+div#header-container-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+div#header-main {
+    width: 60%;
+    padding-right: 5%;
+}
+
+div#header-right-sidebar {
+    width: 35%;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #AAAAAA;
+
+    padding: 0px 15px 10px;
+
+    overflow-wrap: break-word;
+}
+
+p#skill-pool-code {
+    font-family: monospace;
+}
+
 .table-filters-element {
     padding: 0px 6px 5px;
     font-weight: bold;
@@ -16,7 +57,7 @@ body {
 }
 
 #skills-table-container {
-    padding: 25px 30px 30px;
+    padding: 4vh 2vw 4vh;
 }
 
 #skills-table {

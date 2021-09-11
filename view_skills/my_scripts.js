@@ -1,3 +1,5 @@
+const VERSION = '1.0';
+
 const TAG_TANGO_SACRIFICE = '<img src="static/Tango-sacrifice.png" class="tango"/>';
 const TAG_TANGO_ADRENALINE = '<img src="static/Tango-adrenaline.png" class="tango"/>';
 const TAG_TANGO_ENERGY = '<img src="static/Tango-energy.png" class="tango"/>';
@@ -35,6 +37,8 @@ var filters = {
     'camp': [],
     'prof': [],
     'attr': [],
+    'include_pve_only': true, // TODO unimplemented
+    'include_elites': true, // TODO unimplemented
 }
 
 var autoinclude = [
@@ -97,16 +101,48 @@ function generateRandomSkillPool(poolSize, filters, autoinclude) {
     return randomizedSkillPool;
 }
 
+///////////////////////
+/////////////////////// Skill pool generation
+///////////////////////
+
+function prepareSkillPoolGeneratorElements() {
+    // Skill count slider
+    let updateSkillCountSliderSelected = function() {
+        let valPercent = $('input#skillcount-slider').val();
+        let valNumber = Math.floor(valPercent * SKILL_MASTER_COUNT / 100.);
+        let str = `${valPercent}% (${valNumber} skills)`;
+        $('span#skillcount-slider-selected-number').html(str);
+    };
+    $('input#skillcount-slider').on('input', updateSkillCountSliderSelected);
+    updateSkillCountSliderSelected();
+
+    // 'Generate' button
+    $('button#generate').on('click', function() {
+        if (skillsTable != null) {
+            clearTable();
+        }
+
+        var skillPool = generateRandomSkillPool(20, filters, autoinclude);
+        constructTable('#skills-table', skillPool);
+        saveSkillIdList(skillPool);
+    });
+}
 
 ///////////////////////
-/////////////////////// Table creation
+/////////////////////// Table operations
 ///////////////////////
 
 function constructTable(tableSelector, skillIdList) {
+    if (skillsTable != null) {
+        alert('Error: attempting to construct table when a table already exists');
+        return;
+    }
+
+    setTableFilterToAll(); // make sure everything's visible when a new table is created
 
     var table = $(tableSelector);
 
-    var tbody = $('<tbody/>');
+    var tbody = $('#skills-table > tbody');
     table.append(tbody);
 
     for (var i = 0; i < skillIdList.length; i++) {
@@ -127,6 +163,37 @@ function constructTable(tableSelector, skillIdList) {
 
         tbody.append(row);
     }
+
+    // Convert to DataTable. https://datatables.net/index
+    skillsTable = $('#skills-table').DataTable({
+        paging: false,
+        columnDefs: [
+            // Hide Profession column. It's used for ordering only
+            { targets: 0, visible: false },
+            // Disables features on 'Icon' column
+            { targets: 1, orderable: false, searchable: false },
+            // Disables features on 'Costs' column
+            { targets: 4, orderable: false, searchable: false },
+        ],
+        // Always keep things sorted by profession
+        orderFixed: [ 0, 'asc' ],
+        // Initial ordering by attribute, then name
+        order: [[ 5, 'asc' ], [ 2, 'asc' ]],
+    });
+}
+
+function clearTable() {
+    if (skillsTable == null) {
+        // table is already clear
+        return;
+    }
+
+    skillsTable.clearTable();
+    skillsTable.destroy();
+    skillsTable = null;
+
+    // $('#skills-table > tbody').empty();
+    $('p#skill-pool-code').html('No skill pool loaded');
 }
 
 function createProfessionCell(skill) {
@@ -194,64 +261,105 @@ function createCampaignCell(skill) {
 /////////////////////// Table Filters
 ///////////////////////
 
+function setTableFilterToAll() {
+    console.log('Doing filter-all');
+    for (let prof in PROF) {
+        let className = PROF[prof]['class'];
+        $('.' + className).show();
+    }
+}
+
 function enableTableFilterButtons() {
-    $('#filter-all').click(function(){
-        console.log('Doing filter-all');
-        for (var key in PROF) {
-            var className = PROF[key]['class'];
-            $('.' + className).show();
-        }
-    });
+    $('#filter-all').click(setTableFilterToAll);
 
     let hideAllFilterTypes = function() {
-        for (var key in PROF) {
-            var className = PROF[key]['class'];
+        for (let prof in PROF) {
+            let className = PROF[prof]['class'];
             $('.' + className).hide();
         }
     }
 
-    var filterTypes = ['war', 'ran', 'mon', 'nec', 'mes', 'ele', 'ass', 'rit', 'par', 'der', 'com'];
-
-    for (let filterType of filterTypes) {
-        $('#filter-' + filterType).click(function(){
-            console.log('Doing filter-' + filterType);
+    for (let prof in PROF) {
+        $('#filter-' + prof).click(function(){
+            console.log('Doing filter-' + prof);
             hideAllFilterTypes();
-            $('.row-' + filterType).show();
+            $('.row-' + prof).show();
         });
     }
+}
+
+///////////////////////
+/////////////////////// Skill pool saving/loading
+///////////////////////
+
+function saveSkillIdList(skillIdList) {
+    let encoded = encodeSkillIdList(skillIdList);
+    $('p#skill-pool-code').html(encoded);
+}
+
+function encodeSkillIdList(skillIdList) {
+    let skillPool = {
+        'version': VERSION,
+        'skillIdList': skillIdList,
+    };
+    let json = JSON.stringify(skillPool);
+    return window.btoa(json);
+}
+
+function loadSkillIdListFromQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedSkillPool = urlParams.get('skillPool');
+    let skillIdList = decodeSkillIdList(encodeSkillIdList);
+    return skillIdList;
+}
+
+function decodeSkillIdList(encoded) {
+    let json = window.atob(encoded);
+    let skillPool = JSON.parse(json);
+    if (skillPool.version != VERSION) {
+        alert('This skill pool is incompatible as it was created with a different version.'
+            + '\nSkill pool version: ' + skillPool.version
+            + '\nCurrent app version: ' + VERSION);
+        return [];
+    }
+    return skillPool.skillIdList;
 }
 
 ///////////////////////
 /////////////////////// Document ready function
 ///////////////////////
 
-var skillsTable;
+var skillsTable; // DataTable (?) object
 
 $(document).ready(function(){
 
-    console.log('Starting JSON parse & skills-table creation');
-    var skillsList = generateRandomSkillPool(50, filters, autoinclude);
-    constructTable('#skills-table', skillsList);
-    console.log('Finished creating table');
+    prepareSkillPoolGeneratorElements();
 
-    console.log('Starting DataTable creation');
-    // https://datatables.net/index
-    skillsTable = $('#skills-table').DataTable({
-        paging: false,
-        columnDefs: [
-            // Hide Profession column
-            { targets: 0, visible: false },
-            // Disables features on 'Icon' column
-            { targets: 1, orderable: false, searchable: false },
-            // Disables features on 'Costs' column
-            { targets: 4, orderable: false, searchable: false },
-        ],
-        // Always keep things sorted by profession
-        orderFixed: [ 0, 'asc' ],
-        // Initial ordering by attribute, then name
-        order: [[5, 'asc'], [ 2, 'asc' ]],
-    });
-    console.log('Finished DataTable creation');
+    // console.log('Starting JSON parse & skills-table creation');
+    // var skillPool = generateRandomSkillPool(20, filters, autoinclude);
+    // constructTable('#skills-table', skillPool);
+    // console.log('Finished creating table');
+
+    // saveSkillIdList(skillPool);
+
+    // console.log('Starting DataTable creation');
+    // // https://datatables.net/index
+    // skillsTable = $('#skills-table').DataTable({
+    //     paging: false,
+    //     columnDefs: [
+    //         // Hide Profession column. It's used for ordering only
+    //         { targets: 0, visible: false },
+    //         // Disables features on 'Icon' column
+    //         { targets: 1, orderable: false, searchable: false },
+    //         // Disables features on 'Costs' column
+    //         { targets: 4, orderable: false, searchable: false },
+    //     ],
+    //     // Always keep things sorted by profession
+    //     orderFixed: [ 0, 'asc' ],
+    //     // Initial ordering by attribute, then name
+    //     order: [[ 5, 'asc' ], [ 2, 'asc' ]],
+    // });
+    // console.log('Finished DataTable creation');
 
     enableTableFilterButtons();
 });
