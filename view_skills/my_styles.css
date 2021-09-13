@@ -45,8 +45,11 @@ div#header-right-sidebar {
     overflow-wrap: break-word;
 }
 
-p#skill-pool-code {
-    font-family: monospace;
+textarea#skill-pool-code {
+    /* font-family: monospace; */
+    width: 100%;
+    height: 8em;
+    resize: none;
 }
 
 .table-filters-element {

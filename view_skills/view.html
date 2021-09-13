@@ -33,7 +33,7 @@
                             <span>Number of skills:&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             <span style="font-family:monospace;font-size:large;">0%</span>
                             <span>
-                                <input type="range" min="0" max="100" value="50" class="slider" id="skillcount-slider"/>
+                                <input type="range" min="0" max="100" value="50" style="width:200px" id="skillcount-slider"/>
                             </span>
                             <span style="font-family:monospace;font-size:large;">100%</span>
                             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Selected:&nbsp;&nbsp;&nbsp;</span>
@@ -44,9 +44,9 @@
                 </div>
                 <div id="header-right-sidebar">
                     <h4>Skill pool codes</h4>
-                    <p>Each skill pool has a unique code that you can use to reload the skill pool in this page. Simply copy the code into the URL or text box or whatever, I haven't implemented this yet.</p>
+                    <p>Each skill pool has a unique code that you can use to reload the skill pool in this page. Simply copy the code into the URL in the 'skillPoolCode' query parameter. You can then bookmark the URL to view to the same skill pool again later.</p>
                     <p>Current skill pool code:</p>
-                    <p id="skill-pool-code">No skill pool loaded</p>
+                    <textarea id="skill-pool-code" readonly="true" wrap="hard" placeholder="No skill pool loaded"></textarea>
                 </div>
             </div>
         </div>
@@ -86,9 +86,6 @@
                         <th>Attribute</th>
                         <th>Campaign</th>
                     </tr>
-                    <!-- <tr>
-                        <td colspan="100%" style="border-bottom:solid 1px #999999;"></td> 
-                    </tr> -->
                 </thead>
                 <tbody></tbody>
             </table>

@@ -47,9 +47,9 @@ var autoinclude = [
     70, // Comfort Animal
 ]
 
-function generateRandomSkillPool(poolSize, filters, autoinclude) {
+function generateRandomSkillIdList(poolSize, filters, autoinclude) {
     // Return value. An array of skill id's
-    const randomizedSkillPool = [];
+    let randomizedSkillIdList = [];
 
     // Source: https://stackoverflow.com/a/12646864
     let shuffleArray = function(array) {
@@ -68,7 +68,7 @@ function generateRandomSkillPool(poolSize, filters, autoinclude) {
 
     // Add autoincluded skills
     for (let skillId of autoinclude) {
-        randomizedSkillPool.push(skillId);
+        randomizedSkillIdList.push(skillId);
     }
 
     // isSkillAllowed checks a skill against filters
@@ -89,16 +89,18 @@ function generateRandomSkillPool(poolSize, filters, autoinclude) {
 
     // Move skill id's from shuffled master list to the randomizedSkillPool to create a smaller randomized list
     for (let skillId of masterSkillPool) {
-        if (randomizedSkillPool.length >= poolSize) {
+        if (randomizedSkillIdList.length >= poolSize) {
             break;
         }
         if (!autoinclude.includes(skillId) && isSkillAllowed(skillId)) {
-            randomizedSkillPool.push(skillId);
+            randomizedSkillIdList.push(skillId);
         }
     }
 
-    console.log('Randomized skill pool (id\'s): ' + randomizedSkillPool);
-    return randomizedSkillPool;
+    // Sort array so so that two identical skill lists will have the same code
+    randomizedSkillIdList = randomizedSkillIdList.sort(function (a, b) {  return a - b;  });
+    console.log('Randomized skill pool (id\'s): ' + randomizedSkillIdList);
+    return randomizedSkillIdList;
 }
 
 ///////////////////////
@@ -118,39 +120,47 @@ function prepareSkillPoolGeneratorElements() {
 
     // 'Generate' button
     $('button#generate').on('click', function() {
-        if (skillsTable != null) {
-            clearTable();
-        }
-
-        var skillPool = generateRandomSkillPool(20, filters, autoinclude);
-        constructTable('#skills-table', skillPool);
-        saveSkillIdList(skillPool);
+        let skillIdList = generateNewSkillPoolFromUserOptions();
+        displaySkillPool(skillIdList);
     });
+}
+
+function generateNewSkillPoolFromUserOptions() {
+    // TODO implement filters here
+    let skillCountPercent = $('input#skillcount-slider').val();
+    let skillCount = Math.floor(skillCountPercent * SKILL_MASTER_COUNT / 100.);
+    return generateRandomSkillIdList(skillCount, filters, autoinclude);
 }
 
 ///////////////////////
 /////////////////////// Table operations
 ///////////////////////
 
-function constructTable(tableSelector, skillIdList) {
+function displaySkillPool(skillIdList) {
+    if (skillsTable != null) {
+        clearSkillsTable();
+    }
+
+    constructSkillsTable(skillIdList);
+    showSkillPoolCode(skillIdList);
+    setTableFilterToAll(); // make sure everything's visible when a new table is created
+}
+
+function constructSkillsTable(skillIdList) {
     if (skillsTable != null) {
         alert('Error: attempting to construct table when a table already exists');
         return;
     }
-
-    setTableFilterToAll(); // make sure everything's visible when a new table is created
-
-    var table = $(tableSelector);
-
-    var tbody = $('#skills-table > tbody');
-    table.append(tbody);
+    
+    let table = $('#skills-table');
+    let tbody = $('#skills-table > tbody');
 
     for (var i = 0; i < skillIdList.length; i++) {
-        var skillId = skillIdList[i];
-        var skill = SKILL_MASTER_LIST[skillId];
+        let skillId = skillIdList[i];
+        let skill = SKILL_MASTER_LIST[skillId];
         // console.log('Adding skill: ' + skill.name);
 
-        var row = $('<tr/>');
+        let row = $('<tr/>');
         row.addClass(PROF[skill.prof]['class']);
 
         row.append(createProfessionCell(skill));
@@ -166,6 +176,7 @@ function constructTable(tableSelector, skillIdList) {
 
     // Convert to DataTable. https://datatables.net/index
     skillsTable = $('#skills-table').DataTable({
+        autoWidth: false,
         paging: false,
         columnDefs: [
             // Hide Profession column. It's used for ordering only
@@ -182,18 +193,18 @@ function constructTable(tableSelector, skillIdList) {
     });
 }
 
-function clearTable() {
+function clearSkillsTable() {
     if (skillsTable == null) {
         // table is already clear
         return;
     }
 
-    skillsTable.clearTable();
+    skillsTable.clear();
     skillsTable.destroy();
     skillsTable = null;
 
     // $('#skills-table > tbody').empty();
-    $('p#skill-pool-code').html('No skill pool loaded');
+    // $('p#skill-pool-code').html('No skill pool loaded');
 }
 
 function createProfessionCell(skill) {
@@ -269,7 +280,7 @@ function setTableFilterToAll() {
     }
 }
 
-function enableTableFilterButtons() {
+function prepareTableFilterButtons() {
     $('#filter-all').click(setTableFilterToAll);
 
     let hideAllFilterTypes = function() {
@@ -292,9 +303,9 @@ function enableTableFilterButtons() {
 /////////////////////// Skill pool saving/loading
 ///////////////////////
 
-function saveSkillIdList(skillIdList) {
+function showSkillPoolCode(skillIdList) {
     let encoded = encodeSkillIdList(skillIdList);
-    $('p#skill-pool-code').html(encoded);
+    $('textarea#skill-pool-code').html(encoded);
 }
 
 function encodeSkillIdList(skillIdList) {
@@ -303,19 +314,27 @@ function encodeSkillIdList(skillIdList) {
         'skillIdList': skillIdList,
     };
     let json = JSON.stringify(skillPool);
-    return window.btoa(json);
+    let uriEncodedJson = encodeURIComponent(json);
+    // return window.btoa(uriEncodedJson);
+    return uriEncodedJson;
 }
 
-function loadSkillIdListFromQueryParams() {
+function tryLoadingSkillPoolFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
-    const encodedSkillPool = urlParams.get('skillPool');
-    let skillIdList = decodeSkillIdList(encodeSkillIdList);
-    return skillIdList;
+    const skillPoolCode = urlParams.get('skillPoolCode');
+
+    console.log('skillPoolCode query param: ' + skillPoolCode);
+
+    if (skillPoolCode) {
+        let skillIdList = decodeSkillIdList(skillPoolCode);
+        if (skillIdList && skillIdList.length > 0) {
+            displaySkillPool(skillIdList);
+        }
+    }
 }
 
-function decodeSkillIdList(encoded) {
-    let json = window.atob(encoded);
-    let skillPool = JSON.parse(json);
+function decodeSkillIdList(skillPoolJson) {
+    let skillPool = JSON.parse(skillPoolJson);
     if (skillPool.version != VERSION) {
         alert('This skill pool is incompatible as it was created with a different version.'
             + '\nSkill pool version: ' + skillPool.version
@@ -332,36 +351,8 @@ function decodeSkillIdList(encoded) {
 var skillsTable; // DataTable (?) object
 
 $(document).ready(function(){
-
     prepareSkillPoolGeneratorElements();
+    prepareTableFilterButtons();
 
-    // console.log('Starting JSON parse & skills-table creation');
-    // var skillPool = generateRandomSkillPool(20, filters, autoinclude);
-    // constructTable('#skills-table', skillPool);
-    // console.log('Finished creating table');
-
-    // saveSkillIdList(skillPool);
-
-    // console.log('Starting DataTable creation');
-    // // https://datatables.net/index
-    // skillsTable = $('#skills-table').DataTable({
-    //     paging: false,
-    //     columnDefs: [
-    //         // Hide Profession column. It's used for ordering only
-    //         { targets: 0, visible: false },
-    //         // Disables features on 'Icon' column
-    //         { targets: 1, orderable: false, searchable: false },
-    //         // Disables features on 'Costs' column
-    //         { targets: 4, orderable: false, searchable: false },
-    //     ],
-    //     // Always keep things sorted by profession
-    //     orderFixed: [ 0, 'asc' ],
-    //     // Initial ordering by attribute, then name
-    //     order: [[ 5, 'asc' ], [ 2, 'asc' ]],
-    // });
-    // console.log('Finished DataTable creation');
-
-    enableTableFilterButtons();
+    tryLoadingSkillPoolFromQueryParams();
 });
-
-// Would be nice to add an "elite":true/false to the JSON, then use that to make elites stand out more in the table
