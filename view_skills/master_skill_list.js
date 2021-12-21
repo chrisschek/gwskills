@@ -1,7 +1,8 @@
 // According to this: [https://wiki.guildwars.com/wiki/Skill#Skill_quantity], there are 1329 total skills. There are 11 skills missing from the list in this file because:
 //   1) We aren't including Signet of Capture in this list
 //   2) The wiki counts each Factions Allegiance skill twice (Lux + Kurz). For this list, we only count each once; so we'll have 10 fewer skills beacuse of that
-const SKILL_MASTER_COUNT = 1318;
+
+const SKILL_MASTER_COUNT = 1318; // length of SKILL_MASTER_LIST
 
 const SKILL_URL_BASE = 'https://wiki.guildwars.com';
 const SKILL_URL_WIKI = '/wiki';
