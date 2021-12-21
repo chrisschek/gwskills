@@ -46,6 +46,10 @@ const GEN_AUTOINCLUDE = [
     1316,   // Resurrection Signet
     70,     // Comfort Animal
     918,    // "Fall Back!"
+    11,     // Air Attunement
+    128,    // Earth Attunement
+    164,    // Fire Attunement
+    439,    // Water Attunement
 ]
 
 function generateRandomSkillIdList(poolSize, filters, autoinclude) {
