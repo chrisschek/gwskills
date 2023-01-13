@@ -2,8 +2,6 @@
 //   1) We aren't including Signet of Capture in this list
 //   2) The wiki counts each Factions Allegiance skill twice (Lux + Kurz). For this list, we only count each once; so we'll have 10 fewer skills beacuse of that
 
-const SKILL_MASTER_COUNT = 1318; // length of SKILL_MASTER_LIST
-
 const SKILL_URL_BASE = 'https://wiki.guildwars.com';
 const SKILL_URL_WIKI = '/wiki';
 const SKILL_URL_ICON = '/images';
@@ -15,6 +13,8 @@ function getWikiUrl(skill) {
 function getIconUrl(skill) {
     return SKILL_URL_BASE + SKILL_URL_ICON + skill.icon;
 }
+
+const SKILL_MASTER_COUNT = 1318; // length of SKILL_MASTER_LIST
 
 const SKILL_MASTER_LIST = [
     {"name": "\"Charge!\"", "url": "/%22Charge!%22", "icon": "/3/32/%22Charge%21%22.jpg", "prof": "war", "camp": "cor", "attr": "Tactics", "ene": "5", "rec": "20", "desc": "Elite Shout. (<span style=\"color: green; font-weight: bold;\">5...11...13</span> seconds.) Allies in earshot move 33% faster. Initial effect: these allies lose the Crippled condition."},

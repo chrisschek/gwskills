@@ -45,6 +45,12 @@ div#header-right-sidebar {
     overflow-wrap: break-word;
 }
 
+div#legal-thing {
+    padding: 0px 35vw 15px;
+    /* width: 50%; */
+    font-size: 10px;
+}
+
 textarea#skill-pool-code {
     /* font-family: monospace; */
     width: 100%;
