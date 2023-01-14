@@ -54,10 +54,7 @@ div#header-right-sidebar {
 }
 
 div#generator-outer-container {
-    /* display: flex;
-    flex-direction: column; */
-    /* justify-content: center; */
-    padding: 10vh 26vw 4vh;
+    padding: 10vh 26vw 3vh;
 }
 
 div#generator-options-section {
