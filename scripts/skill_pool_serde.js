@@ -17,7 +17,7 @@ function encodeSkillIdList(skillIdList) {
 function decodeSkillIdList(encodedList) {
     let skillIdList = [];
     let bitArray = bitArrayFromBase64(encodedList);
-    for (let i = 0; i < bitArray.length; i++) {
+    for (let i = 0; i < bitArray.length && i < SKILL_MASTER_COUNT; i++) {
         if (bitArray.getBit(i)) {
             skillIdList.push(i);
         }
