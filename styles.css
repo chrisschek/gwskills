@@ -29,8 +29,16 @@ div#header-container-inner {
 }
 
 div#header-main {
+    display: flex;
+    flex-direction: column;
+
     width: 60%;
     padding-right: 5%;
+}
+
+div#header-title {
+    display: flex;
+    flex-direction: row;
 }
 
 div#header-right-sidebar {
@@ -45,17 +53,48 @@ div#header-right-sidebar {
     overflow-wrap: break-word;
 }
 
+div#generator-outer-container {
+    /* display: flex;
+    flex-direction: column; */
+    /* justify-content: center; */
+    padding: 10vh 26vw 4vh;
+}
+
+div#generator-options-section {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #AAAAAA;
+
+    padding: 1em 4ch;
+}
+
 div#legal-thing {
-    padding: 0px 35vw 15px;
-    /* width: 50%; */
+    padding: 0px 35vw 25px;
     font-size: 10px;
 }
 
 textarea#skill-pool-code {
-    /* font-family: monospace; */
     width: 100%;
     height: 8em;
     resize: none;
+}
+
+textarea.ta-skill-list {
+    width: 90%;
+    height: 10em;
+    resize: vertical;
+
+    padding: 1ch;
+
+    line-height: 1.1em;
+}
+
+button#generate {
+    font-size: 1.2rem;
+
+    padding: 7px 12px 7px;
+
+    margin: 2.3rem 0px 1.4rem;
 }
 
 .table-filters-element {

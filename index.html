@@ -9,94 +9,164 @@
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-        <!-- DataTables for sortable tables -->
-        <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css"/> -->
-        <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
-
+        <!-- common stuff -->
         <link rel="stylesheet" href="styles.css"/>
         <script src="scripts/bitarray.js"></script>
         <script src="scripts/skill_list.js"></script>
-        <script src="scripts/skill_pool_generator.js"></script>
         <script src="scripts/skill_pool_serde.js"></script>
-        <script src="scripts/table_operations.js"></script>
+
+        <script src="scripts/skill_pool_generator.js"></script>
     </head>
     <body>
-        <div id="header-container-outer">
-            <div style="display:flex;flex-direction:row;">
-                <img src="static/gw-helmet.png" id="title-icon"/>
-                <h1>Guild Wars Sealed Deck Generator</h1>
-            </div>
-            <div id="header-container-inner">
-                <div id="header-main">
-                    <div id="header-info-section">
-                        <p>
-                            A random skill pool generator inspired by the <a href="https://wiki.guildwars.com/wiki/Sealed_Deck">Sealed Deck</a>/<a href="https://wiki.guildwars.com/wiki/Codex_Arena">Codex Arena</a> PvP formats.
-                            Use this tool to produce a randomized subset of the skills available in the game, then try to create the most effective builds that you can with the skills provided!
-                        </p>
-                    </div>
-                    <div id="header-skillpool-generator">
-                        <h4>Generate new skill pool</h4>
-                        <p>Placeholder text<br>Placeholder text<br>Placeholder text</p>
-                        <div class="slider-container" style="display:flex;flex-direction:row;">
-                            <span>Number of skills:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <span style="font-family:monospace;font-size:large;">0%</span>
-                            <span>
-                                <input type="range" min="0" max="100" value="30" style="width:200px" id="skillcount-slider"/>
-                            </span>
-                            <span style="font-family:monospace;font-size:large;">100%</span>
-                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Selected:&nbsp;&nbsp;&nbsp;</span>
-                            <span style="font-family:monospace;font-size:large;", id="skillcount-slider-selected-number">uninitialized</span>
-                        </div>
-                        <button id="generate">Generate New Skill Pool</button>
-                    </div>
+
+        <div id="generator-outer-container">
+
+            <!-- <div id="intro" style="margin: 8vh 24vw 30px;"> -->
+            <div id="intro" style="padding:0px 4ch 2em;">
+                <div style="display:flex;flex-direction:row;">
+                    <img src="static/gw-helmet.png" id="title-icon"/>
+                    <h1>Guild Wars Sealed Deck Generator</h1>
                 </div>
-                <div id="header-right-sidebar">
-                    <h4>Skill pool codes</h4>
-                    <p>Each skill pool has a unique code that you can use to reload the skill pool in this page. Simply copy the code into the URL in the 'skillPoolCode' query parameter. You can then bookmark the URL to view to the same skill pool again later.</p>
-                    <p>Current skill pool code:</p>
-                    <textarea id="skill-pool-code" readonly="true" wrap="hard" placeholder="No skill pool loaded"></textarea>
+                <div>
+                    <p>
+                        A random skill pool generator inspired by the <a href="https://wiki.guildwars.com/wiki/Sealed_Deck">Sealed Deck</a>/<a href="https://wiki.guildwars.com/wiki/Codex_Arena">Codex Arena</a> PvP formats.
+                        Use this tool to produce a deck–a small set of skills chosen at random–then try to create the most effective build(s) using only the skills in your deck!
+                    </p>
                 </div>
             </div>
-        </div>
 
-        <!-- Table filters. Need to figure out how to implement these later -->
-        <div id="table-filters">
-            <hr>
-            <table style="margin:auto">
-                <tr>
-                    <th id="filter-all" class="table-filters-element"><img src="static/Tango-quest-icon.png" class="tango"/> All</th>
-                    <th id="filter-war" class="table-filters-element"><img src="static/Warrior-tango-icon-20.png" class="tango"/> Warrior</th>
-                    <th id="filter-ran" class="table-filters-element"><img src="static/Ranger-tango-icon-20.png" class="tango"/><a> Ranger</a></th>
-                    <th id="filter-mon" class="table-filters-element"><img src="static/Monk-tango-icon-20.png" class="tango"/><a> Monk</a></th>
-                    <th id="filter-nec" class="table-filters-element"><img src="static/Necromancer-tango-icon-20.png" class="tango"/><a> Necromancer</a></th>
-                    <th id="filter-mes" class="table-filters-element"><img src="static/Mesmer-tango-icon-20.png" class="tango"/><a> Mesmer</a></th>
-                    <th id="filter-ele" class="table-filters-element"><img src="static/Elementalist-tango-icon-20.png" class="tango"/><a> Elementalist</a></th>
-                    <th id="filter-ass" class="table-filters-element"><img src="static/Assassin-tango-icon-20.png" class="tango"/><a> Assassin</a></th>
-                    <th id="filter-rit" class="table-filters-element"><img src="static/Ritualist-tango-icon-20.png" class="tango"/><a> Ritualist</a></th>
-                    <th id="filter-par" class="table-filters-element"><img src="static/Paragon-tango-icon-20.png" class="tango"/><a> Paragon</a></th>
-                    <th id="filter-der" class="table-filters-element"><img src="static/Dervish-tango-icon-20.png" class="tango"/><a> Dervish</a></th>
-                    <th id="filter-com" class="table-filters-element"><img src="static/Any-tango-icon-20.png" class="tango"/><a> Common</a></th>
-                </tr>
-            </table>
-            <hr>
-        </div>
+            <div id="generator-options-section">
+                <h2>Sealed Deck Options</h2>
 
-        <!-- Skills table -->
-        <div id="skills-table-container">
-            <table id="skills-table">
-                <thead>
-                    <tr>
-                        <th>Profession</th>
-                        <th>Icon</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Costs</th>
-                        <th>Attribute</th>
-                        <th>Campaign</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+                <div id="gen-campaign-container">
+                    <h4 style="margin-bottom:0.6em;">Campaigns</h4>
+
+                    <div style="display:grid;">
+                        <span id="cb-camp-core-span" style="grid-column:1;grid-row:1;">
+                            <input type="checkbox" checked id="cb-camp-core" value="cor">
+                            <label for="cb-camp-core">Core</label>
+                        </span>
+                        <span id="cb-camp-proph-span" style="grid-column:2;grid-row:1;">
+                            <input type="checkbox" checked id="cb-camp-proph" value="pro">
+                            <label for="cb-camp-proph">Prophecies</label>
+                        </span>
+                        <span id="cb-camp-fact-span" style="grid-column:3;grid-row:1;">
+                            <input type="checkbox" checked id="cb-camp-fact" value="fac">
+                            <label for="cb-camp-fact">Factions</label>
+                        </span>
+                        <span id="cb-camp-night-span" style="grid-column:4;grid-row:1;">
+                            <input type="checkbox" checked id="cb-camp-night" value="nig">
+                            <label for="cb-camp-night">Nightfall</label>
+                        </span>
+                        <span id="cb-camp-eotn-span" style="grid-column:5;grid-row:1;">
+                            <input type="checkbox" checked id="cb-camp-eotn" value="eye">
+                            <label for="cb-camp-eotn">Eye of the North</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="gen-profession-container">
+                    <h4 style="margin-bottom:0.6em;">Professions</h4>
+
+                    <div style="display:grid;">
+                        <span id="cb-prof-war-span" style="grid-column:1;grid-row:1;">
+                            <input type="checkbox" checked id="cb-prof-war" value="war">
+                            <label for="cb-prof-war">Warrior</label>
+                        </span>
+                        <span id="cb-prof-ran-span" style="grid-column:2;grid-row:1;">
+                            <input type="checkbox" checked id="cb-prof-ran" value="ran">
+                            <label for="cb-prof-ran">Ranger</label>
+                        </span>
+                        <span id="cb-prof-mon-span" style="grid-column:3;grid-row:1;">
+                            <input type="checkbox" checked id="cb-prof-mon" value="mon">
+                            <label for="cb-prof-mon">Monk</label>
+                        </span>
+                        <span id="cb-prof-nec-span" style="grid-column:4;grid-row:1;">
+                            <input type="checkbox" checked id="cb-prof-nec" value="nec">
+                            <label for="cb-prof-nec">Necromancer</label>
+                        </span>
+                        <span id="cb-prof-mes-span" style="grid-column:5;grid-row:1;">
+                            <input type="checkbox" checked id="cb-prof-mes" value="mes">
+                            <label for="cb-prof-mes">Mesmer</label>
+                        </span>
+                        <span id="cb-prof-ele-span" style="grid-column:1;grid-row:2;">
+                            <input type="checkbox" checked id="cb-prof-ele" value="ele">
+                            <label for="cb-prof-ele">Elementalist</label>
+                        </span>
+                        <span id="cb-prof-ass-span" style="grid-column:2;grid-row:2;">
+                            <input type="checkbox" checked id="cb-prof-ass" value="ass">
+                            <label for="cb-prof-ass">Assassin</label>
+                        </span>
+                        <span id="cb-prof-rit-span" style="grid-column:3;grid-row:2;">
+                            <input type="checkbox" checked id="cb-prof-rit" value="rit">
+                            <label for="cb-prof-rit">Ritualist</label>
+                        </span>
+                        <span id="cb-prof-par-span" style="grid-column:4;grid-row:2;">
+                            <input type="checkbox" checked id="cb-prof-par" value="par">
+                            <label for="cb-prof-par">Paragon</label>
+                        </span>
+                        <span id="cb-prof-der-span" style="grid-column:5;grid-row:2;">
+                            <input type="checkbox" checked id="cb-prof-der" value="der">
+                            <label for="cb-prof-der">Dervish</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="gen-pveonly-container">
+                    <h4 style="margin-bottom:0.6em;">PvE-only Skills</h4>
+                    <span id="cb-prof-war-span">
+                        <input type="checkbox" checked id="cb-pveonly">
+                        <label for="cb-pveonly">Include PvE-only skills</label>
+                    </span>
+                </div>
+
+                <div id="gen-elite-container">
+                    <h4 style="margin-bottom:0.6em;">Elite Skills</h4>
+                    <span id="cb-elite-span">
+                        <input type="checkbox" checked id="cb-elite">
+                        <label for="cb-elite">Include elite skills</label>
+                    </span>
+                </div>
+
+                <!-- <div id="gen-autoinclude-container">
+                    <h4 style="margin-bottom:0.6em;">Whitelisted Skills</h4>
+                    <div style="font-size:small;margin-bottom:1em;">These skills will be guaranteed to show up in the deck. Write a single skill name per line, and use exact punctuation and capitalization.</div>
+                    <textarea id="gen-autoinclude" class="ta-skill-list" placeholder="Type skill names here"></textarea>
+                </div>
+
+                <div id="gen-autoexclude-container">
+                    <h4 style="margin-bottom:0.6em;">Blacklisted Skills</h4>
+                    <div style="font-size:small;margin-bottom:1em;">These skills will not show up in the deck. Write a single skill name per line, and use exact punctuation and capitalization.</div>
+                    <textarea id="gen-autoexclude" class="ta-skill-list" placeholder="Type skill names here"></textarea>
+                </div> -->
+
+                <div id="gen-auto-include-exclude-container">
+                    <h4 style="margin-bottom:0.6em;">Whitelist & Blacklist</h4>
+                    <div style="font-size:small;margin-bottom:1em;">Whitelisted skills (left) are guaranteed to show up in the deck, while blacklisted skills (right) are guaranteed not to. Write a single skill name per line, and use exact punctuation and capitalization.</div>
+                    <!-- <div style="display:grid;column-count:2;column-gap:15px;"> -->
+                    <div style="display:grid;column-gap:20px;grid-template-columns: auto auto;">
+                        <textarea id="gen-autoinclude" class="ta-skill-list" placeholder="Type whitelisted skill names here" style="grid-column:1;"></textarea>
+                        <textarea id="gen-autoexclude" class="ta-skill-list" placeholder="Type blacklisted skill names here" style="grid-column:2;"></textarea>
+                    </div>
+                </div>
+
+                <div id="gen-slider-container">
+                    <h4 style="margin-bottom:0.6em;">Deck Size</h4>
+                    <span style="margin-right:2ch;">Number of skills:</span>
+                    <span style="font-family:monospace;font-size:large;">0%</span>
+                    <span>
+                        <input type="range" min="0" max="100" value="30" style="width:200px" id="skillcount-slider"/>
+                    </span>
+                    <span style="font-family:monospace;font-size:large;">100%</span>
+                    <span style="margin-left:2ch;margin-right:1ch;">Selected:</span>
+                    <span style="font-family:monospace;font-size:large;", id="skillcount-slider-selected-number">uninitialized</span>
+                </div>
+
+                <!-- <div id="gen-button-container" style="display:flex;justify-content:right;"> -->
+                    <button id="generate">Generate Sealed Deck</button>
+                <!-- </div> -->
+            </div>
+
         </div>
 
         <div id="legal-thing">

@@ -4,6 +4,30 @@
 
 // Ordering of the list matters! We save randomized skill pools using the indices of the master skill list. If any skills need to be added, append only.
 
+// TODO add explicit 'id' field to the skill objects
+
+const PROF = {
+    'war': { 'id': 0, 'name': 'Warrior', 'class': 'row-war', },
+    'ran': { 'id': 1, 'name': 'Ranger', 'class': 'row-ran', },
+    'mon': { 'id': 2, 'name': 'Monk', 'class': 'row-mon', },
+    'nec': { 'id': 3, 'name': 'Necromancer', 'class': 'row-nec', },
+    'mes': { 'id': 4, 'name': 'Mesmer', 'class': 'row-mes', },
+    'ele': { 'id': 5, 'name': 'Elementalist', 'class': 'row-ele', },
+    'ass': { 'id': 6, 'name': 'Assassin', 'class': 'row-ass', },
+    'rit': { 'id': 7, 'name': 'Ritualist', 'class': 'row-rit', },
+    'par': { 'id': 8, 'name': 'Paragon', 'class': 'row-par', },
+    'der': { 'id': 9, 'name': 'Dervish', 'class': 'row-der', },
+    'com': { 'id': 10, 'name': 'Common', 'class': 'row-com', },
+};
+
+const CAMP = {
+    'cor': 'Core',
+    'pro': 'Prophecies',
+    'fac': 'Factions',
+    'nig': 'Nightfall',
+    'eye': 'Eye of the North',
+};
+
 const SKILL_URL_BASE = 'https://wiki.guildwars.com';
 const SKILL_URL_WIKI = '/wiki';
 const SKILL_URL_ICON = '/images';

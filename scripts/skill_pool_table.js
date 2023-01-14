@@ -1,32 +1,8 @@
-const VERSION = '1.0';
-
 const TAG_TANGO_SACRIFICE = '<img src="static/Tango-sacrifice.png" class="tango"/>';
 const TAG_TANGO_ADRENALINE = '<img src="static/Tango-adrenaline.png" class="tango"/>';
 const TAG_TANGO_ENERGY = '<img src="static/Tango-energy.png" class="tango"/>';
 const TAG_TANGO_ACTIVATION = '<img src="static/Tango-activation-darker.png" class="tango"/>';
 const TAG_TANGO_RECHARGE = '<img src="static/Tango-recharge-darker.png" class="tango"/>';
-
-const PROF = {
-    'war': { 'id': 0, 'name': 'Warrior', 'class': 'row-war', },
-    'ran': { 'id': 1, 'name': 'Ranger', 'class': 'row-ran', },
-    'mon': { 'id': 2, 'name': 'Monk', 'class': 'row-mon', },
-    'nec': { 'id': 3, 'name': 'Necromancer', 'class': 'row-nec', },
-    'mes': { 'id': 4, 'name': 'Mesmer', 'class': 'row-mes', },
-    'ele': { 'id': 5, 'name': 'Elementalist', 'class': 'row-ele', },
-    'ass': { 'id': 6, 'name': 'Assassin', 'class': 'row-ass', },
-    'rit': { 'id': 7, 'name': 'Ritualist', 'class': 'row-rit', },
-    'par': { 'id': 8, 'name': 'Paragon', 'class': 'row-par', },
-    'der': { 'id': 9, 'name': 'Dervish', 'class': 'row-der', },
-    'com': { 'id': 10, 'name': 'Common', 'class': 'row-com', },
-};
-
-const CAMP = {
-    'cor': 'Core',
-    'pro': 'Prophecies',
-    'fac': 'Factions',
-    'nig': 'Nightfall',
-    'eye': 'Eye of the North',
-};
 
 ///////////////////////
 /////////////////////// Table operations
@@ -203,21 +179,28 @@ var skillsTable; // DataTable (?) object
 
 function tryLoadingSkillPoolFromQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
-    const skillPoolCode = urlParams.get('skillPoolCode');
+    const deckCode = urlParams.get('deckCode');
 
-    console.log('skillPoolCode query param: ' + skillPoolCode);
+    console.log('deckCode query param: ' + deckCode);
 
-    if (skillPoolCode) {
-        let skillIdList = decodeSkillIdList(skillPoolCode);
-        if (skillIdList && skillIdList.length > 0) {
-            displaySkillPool(skillIdList);
-        }
+    if (!deckCode) {
+        throw "Query param 'deckCode' is missing or empty";
+    }
+
+    let skillIdList = decodeSkillIdList(deckCode);
+    if (skillIdList && skillIdList.length > 0) {
+        displaySkillPool(skillIdList);
     }
 }
 
 $(document).ready(function(){
-    prepareSkillPoolGeneratorElements();
     prepareTableFilterButtons();
 
-    tryLoadingSkillPoolFromQueryParams();
+    try {
+        tryLoadingSkillPoolFromQueryParams();
+    }
+    catch(err) {
+        $('#skills-table-container').html("Uh oh, something went wrong while loading the deck...").css("color", "red");
+        console.error(err);
+    }
 });

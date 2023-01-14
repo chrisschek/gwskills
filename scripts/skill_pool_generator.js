@@ -81,11 +81,22 @@ function generateRandomSkillIdList(poolSize, filters, autoinclude) {
 }
 
 ///////////////////////
-/////////////////////// Skill pool generation
+/////////////////////// Dealing with ui elements
 ///////////////////////
 
-function prepareSkillPoolGeneratorElements() {
-    // Skill count slider
+const AUTOINCLUDE_SKILLS_TEXT = "Resurrection Signet"
+    + "\nComfort Animal"
+    + "\n\"Fall Back!\""
+    + "\nAir Attunement"
+    + "\nEarth Attunement"
+    + "\nFire Attunement"
+    + "\nWater Attunement";
+
+function prepareAutoincludeTextbox() {
+    $('textarea#gen-autoinclude').html(AUTOINCLUDE_SKILLS_TEXT);
+}
+
+function prepareSkillCountSlider() {
     let updateSkillCountSliderSelected = function() {
         let valPercent = $('input#skillcount-slider').val();
         let valNumber = Math.floor(valPercent * SKILL_MASTER_COUNT / 100.);
@@ -94,12 +105,28 @@ function prepareSkillPoolGeneratorElements() {
     };
     $('input#skillcount-slider').on('input', updateSkillCountSliderSelected);
     updateSkillCountSliderSelected();
+}
 
-    // 'Generate' button
+function prepareGenerateButton() {
     $('button#generate').on('click', function() {
         let skillIdList = generateNewSkillPoolFromUserOptions();
-        displaySkillPool(skillIdList);
+        let bitArray = new EncodableBitArray(SKILL_MASTER_COUNT);
+        skillIdList.forEach(index => bitArray.setBit(index, 1));
+        let deckCode = bitArray.toBase64();
+        let url = "./table_view.html?deckCode=" + deckCode;
+        window.location.assign(url);
     });
+}
+
+function lookupSkillId(name) {
+    for (let i = 0; i < SKILL_MASTER_COUNT; i++) {
+        let skill = SKILL_MASTER_LIST[i];
+        if (name == skill.name) {
+            return i;
+        }
+    }
+    console.log("Couldn't find skill id for skill name: " + name);
+    return null;
 }
 
 function generateNewSkillPoolFromUserOptions() {
@@ -108,3 +135,9 @@ function generateNewSkillPoolFromUserOptions() {
     let skillCount = Math.floor(skillCountPercent * SKILL_MASTER_COUNT / 100.);
     return generateRandomSkillIdList(skillCount, GEN_EMPTY_FILTERS, GEN_AUTOINCLUDE);
 }
+
+$(document).ready(function(){
+    prepareAutoincludeTextbox();
+    prepareSkillCountSlider();
+    prepareGenerateButton();
+});
