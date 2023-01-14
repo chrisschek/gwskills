@@ -10,6 +10,7 @@ const GEN_EMPTY_FILTERS = {
     'attr': [],
     'include_pve_only': true, // TODO unimplemented
     'include_elites': true, // TODO unimplemented
+    'include_anniversary': true, // TODO unimplemented
 }
 
 const GEN_AUTOINCLUDE = [

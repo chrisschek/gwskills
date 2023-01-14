@@ -2,6 +2,8 @@
 //   1) We aren't including Signet of Capture in this list
 //   2) The wiki counts each Factions Allegiance skill twice (Lux + Kurz). For this list, we only count each once; so we'll have 10 fewer skills beacuse of that
 
+// Ordering of the list matters! We save randomized skill pools using the indices of the master skill list. If any skills need to be added, append only.
+
 const SKILL_URL_BASE = 'https://wiki.guildwars.com';
 const SKILL_URL_WIKI = '/wiki';
 const SKILL_URL_ICON = '/images';
