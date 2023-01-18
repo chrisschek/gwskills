@@ -43,23 +43,23 @@
 
                     <div style="display:grid;">
                         <span id="cb-camp-core-span" style="grid-column:1;grid-row:1;">
-                            <input type="checkbox" checked id="cb-camp-core" value="cor">
+                            <input type="checkbox" checked id="cb-camp-core" class="cb-camp" value="cor">
                             <label for="cb-camp-core">Core</label>
                         </span>
                         <span id="cb-camp-proph-span" style="grid-column:2;grid-row:1;">
-                            <input type="checkbox" checked id="cb-camp-proph" value="pro">
+                            <input type="checkbox" checked id="cb-camp-proph" class="cb-camp" value="pro">
                             <label for="cb-camp-proph">Prophecies</label>
                         </span>
                         <span id="cb-camp-fact-span" style="grid-column:3;grid-row:1;">
-                            <input type="checkbox" checked id="cb-camp-fact" value="fac">
+                            <input type="checkbox" checked id="cb-camp-fact" class="cb-camp" value="fac">
                             <label for="cb-camp-fact">Factions</label>
                         </span>
                         <span id="cb-camp-night-span" style="grid-column:4;grid-row:1;">
-                            <input type="checkbox" checked id="cb-camp-night" value="nig">
+                            <input type="checkbox" checked id="cb-camp-night" class="cb-camp" value="nig">
                             <label for="cb-camp-night">Nightfall</label>
                         </span>
                         <span id="cb-camp-eotn-span" style="grid-column:5;grid-row:1;">
-                            <input type="checkbox" checked id="cb-camp-eotn" value="eye">
+                            <input type="checkbox" checked id="cb-camp-eotn" class="cb-camp" value="eye">
                             <label for="cb-camp-eotn">Eye of the North</label>
                         </span>
                     </div>
@@ -70,43 +70,43 @@
 
                     <div style="display:grid;">
                         <span id="cb-prof-war-span" style="grid-column:1;grid-row:1;">
-                            <input type="checkbox" checked id="cb-prof-war" value="war">
+                            <input type="checkbox" checked id="cb-prof-war" class="cb-prof" value="war">
                             <label for="cb-prof-war">Warrior</label>
                         </span>
                         <span id="cb-prof-ran-span" style="grid-column:2;grid-row:1;">
-                            <input type="checkbox" checked id="cb-prof-ran" value="ran">
+                            <input type="checkbox" checked id="cb-prof-ran" class="cb-prof" value="ran">
                             <label for="cb-prof-ran">Ranger</label>
                         </span>
                         <span id="cb-prof-mon-span" style="grid-column:3;grid-row:1;">
-                            <input type="checkbox" checked id="cb-prof-mon" value="mon">
+                            <input type="checkbox" checked id="cb-prof-mon" class="cb-prof" value="mon">
                             <label for="cb-prof-mon">Monk</label>
                         </span>
                         <span id="cb-prof-nec-span" style="grid-column:4;grid-row:1;">
-                            <input type="checkbox" checked id="cb-prof-nec" value="nec">
+                            <input type="checkbox" checked id="cb-prof-nec" class="cb-prof" value="nec">
                             <label for="cb-prof-nec">Necromancer</label>
                         </span>
                         <span id="cb-prof-mes-span" style="grid-column:5;grid-row:1;">
-                            <input type="checkbox" checked id="cb-prof-mes" value="mes">
+                            <input type="checkbox" checked id="cb-prof-mes" class="cb-prof" value="mes">
                             <label for="cb-prof-mes">Mesmer</label>
                         </span>
                         <span id="cb-prof-ele-span" style="grid-column:1;grid-row:2;">
-                            <input type="checkbox" checked id="cb-prof-ele" value="ele">
+                            <input type="checkbox" checked id="cb-prof-ele" class="cb-prof" value="ele">
                             <label for="cb-prof-ele">Elementalist</label>
                         </span>
                         <span id="cb-prof-ass-span" style="grid-column:2;grid-row:2;">
-                            <input type="checkbox" checked id="cb-prof-ass" value="ass">
+                            <input type="checkbox" checked id="cb-prof-ass" class="cb-prof" value="ass">
                             <label for="cb-prof-ass">Assassin</label>
                         </span>
                         <span id="cb-prof-rit-span" style="grid-column:3;grid-row:2;">
-                            <input type="checkbox" checked id="cb-prof-rit" value="rit">
+                            <input type="checkbox" checked id="cb-prof-rit" class="cb-prof" value="rit">
                             <label for="cb-prof-rit">Ritualist</label>
                         </span>
                         <span id="cb-prof-par-span" style="grid-column:4;grid-row:2;">
-                            <input type="checkbox" checked id="cb-prof-par" value="par">
+                            <input type="checkbox" checked id="cb-prof-par" class="cb-prof" value="par">
                             <label for="cb-prof-par">Paragon</label>
                         </span>
                         <span id="cb-prof-der-span" style="grid-column:5;grid-row:2;">
-                            <input type="checkbox" checked id="cb-prof-der" value="der">
+                            <input type="checkbox" checked id="cb-prof-der" class="cb-prof" value="der">
                             <label for="cb-prof-der">Dervish</label>
                         </span>
                     </div>
@@ -115,16 +115,16 @@
                 <div id="gen-pveonly-container">
                     <h4 style="margin-bottom:0.6em;">PvE-only Skills</h4>
                     <span id="cb-prof-war-span">
-                        <input type="checkbox" checked id="cb-pveonly">
-                        <label for="cb-pveonly">Include PvE-only skills</label>
+                        <input type="checkbox" checked id="cb-pveonly" disabled="true">
+                        <label for="cb-pveonly">Include PvE-only skills <i style="font-size:smaller">(not implemented yet)</i></label>
                     </span>
                 </div>
 
                 <div id="gen-elite-container">
                     <h4 style="margin-bottom:0.6em;">Elite Skills</h4>
                     <span id="cb-elite-span">
-                        <input type="checkbox" checked id="cb-elite">
-                        <label for="cb-elite">Include elite skills</label>
+                        <input type="checkbox" checked id="cb-elite" disabled="true">
+                        <label for="cb-elite">Include elite skills <i style="font-size:smaller">(not implemented yet)</i></label>
                     </span>
                 </div>
 
@@ -140,13 +140,13 @@
                     <textarea id="gen-autoexclude" class="ta-skill-list" placeholder="Type skill names here"></textarea>
                 </div> -->
 
-                <div id="gen-auto-include-exclude-container">
+                <div id="gen-whitelist-blacklist-container">
                     <h4 style="margin-bottom:0.6em;">Whitelist & Blacklist</h4>
                     <div style="font-size:small;margin-bottom:1em;">Whitelisted skills (left) are guaranteed to show up in the deck, while blacklisted skills (right) are guaranteed not to. Write a single skill name per line, and use exact punctuation and capitalization.</div>
                     <!-- <div style="display:grid;column-count:2;column-gap:15px;"> -->
                     <div style="display:grid;column-gap:20px;grid-template-columns: auto auto;">
-                        <textarea id="gen-autoinclude" class="ta-skill-list" placeholder="Type whitelisted skill names here" style="grid-column:1;"></textarea>
-                        <textarea id="gen-autoexclude" class="ta-skill-list" placeholder="Type blacklisted skill names here" style="grid-column:2;"></textarea>
+                        <textarea id="gen-whitelist" class="ta-skill-list" placeholder="Type whitelisted skill names here" style="grid-column:1;"></textarea>
+                        <textarea id="gen-blacklist" class="ta-skill-list" placeholder="Type blacklisted skill names here" style="grid-column:2;"></textarea>
                     </div>
                 </div>
 

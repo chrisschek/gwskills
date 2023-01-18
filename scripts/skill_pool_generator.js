@@ -2,29 +2,7 @@
 /////////////////////// Random Skill List Generator
 ///////////////////////
 
-// TODO filters aren't implemented in UI
-const GEN_EMPTY_FILTERS = {
-    'name': [],
-    'camp': [],
-    'prof': [],
-    'attr': [],
-    'include_pve_only': true, // TODO unimplemented
-    'include_elites': true, // TODO unimplemented
-    'include_anniversary': true, // TODO unimplemented
-}
-
-const GEN_AUTOINCLUDE = [
-    // These are indices in the master skill list
-    1316,   // Resurrection Signet
-    70,     // Comfort Animal
-    918,    // "Fall Back!"
-    11,     // Air Attunement
-    128,    // Earth Attunement
-    164,    // Fire Attunement
-    439,    // Water Attunement
-]
-
-function generateRandomSkillIdList(poolSize, filters, autoinclude) {
+function generateRandomSkillIdList(poolSize, filters) {
     // Return value. An array of skill id's
     let randomizedSkillIdList = [];
 
@@ -43,21 +21,21 @@ function generateRandomSkillIdList(poolSize, filters, autoinclude) {
     }
     shuffleArray(masterSkillPool);
 
-    // Add autoincluded skills
-    for (let skillId of autoinclude) {
+    // Add whitelistd skills
+    for (let skillId of filters.whitelist) {
         randomizedSkillIdList.push(skillId);
     }
 
     // isSkillAllowed checks a skill against filters
     let isSkillAllowed = function(skillId) {
         let skill = SKILL_MASTER_LIST[skillId];
-        if (filters.name.includes(skill.name)) {
+        if (filters.blacklist.includes(skillId)) {
             return false;
-        } else if (filters.camp.includes(skill.camp)) {
+        } else if (!filters.camp.includes(skill.camp)) {
             return false;
-        } else if (filters.prof.includes(skill.prof)) {
+        } else if (!filters.prof.includes(skill.prof)) {
             return false;
-        } else if (filters.attr.includes(skill.attr)) {
+        } else if (false /*!filters.attr.includes(skill.attr)*/) {
             return false;
         } else {
             return true;
@@ -69,7 +47,7 @@ function generateRandomSkillIdList(poolSize, filters, autoinclude) {
         if (randomizedSkillIdList.length >= poolSize) {
             break;
         }
-        if (!autoinclude.includes(skillId) && isSkillAllowed(skillId)) {
+        if (!filters.whitelist.includes(skillId) && isSkillAllowed(skillId)) {
             randomizedSkillIdList.push(skillId);
         }
     }
@@ -81,10 +59,10 @@ function generateRandomSkillIdList(poolSize, filters, autoinclude) {
 }
 
 ///////////////////////
-/////////////////////// Dealing with ui elements
+/////////////////////// UI elements setup
 ///////////////////////
 
-const AUTOINCLUDE_SKILLS_TEXT = "Resurrection Signet"
+const WHITELIST_DEFAULT_TEXT = "Resurrection Signet"
     + "\nComfort Animal"
     + "\n\"Fall Back!\""
     + "\nAir Attunement"
@@ -92,8 +70,9 @@ const AUTOINCLUDE_SKILLS_TEXT = "Resurrection Signet"
     + "\nFire Attunement"
     + "\nWater Attunement";
 
-function prepareAutoincludeTextbox() {
-    $('textarea#gen-autoinclude').html(AUTOINCLUDE_SKILLS_TEXT);
+function preparewhitelistTextbox() {
+    //$('textarea#gen-whitelist').html(WHITELIST_DEFAULT_TEXT);
+    $('textarea#gen-whitelist').val(WHITELIST_DEFAULT_TEXT);
 }
 
 function prepareSkillCountSlider() {
@@ -118,26 +97,55 @@ function prepareGenerateButton() {
     });
 }
 
-function lookupSkillId(name) {
-    for (let i = 0; i < SKILL_MASTER_COUNT; i++) {
-        let skill = SKILL_MASTER_LIST[i];
-        if (name == skill.name) {
-            return i;
-        }
-    }
-    console.log("Couldn't find skill id for skill name: " + name);
-    return null;
-}
-
+// call this from browser console for debugging
 function generateNewSkillPoolFromUserOptions() {
     // TODO implement filters here
     let skillCountPercent = $('input#skillcount-slider').val();
     let skillCount = Math.floor(skillCountPercent * SKILL_MASTER_COUNT / 100.);
-    return generateRandomSkillIdList(skillCount, GEN_EMPTY_FILTERS, GEN_AUTOINCLUDE);
+    let filters = readFilterInputs();
+    console.log("Using filters: " + JSON.stringify(filters));
+    return generateRandomSkillIdList(skillCount, filters);
 }
 
 $(document).ready(function(){
-    prepareAutoincludeTextbox();
+    preparewhitelistTextbox();
     prepareSkillCountSlider();
     prepareGenerateButton();
 });
+
+///////////////////////
+/////////////////////// UI elements reading
+///////////////////////
+
+function readFilterInputs() {
+    let campList = [];
+    $('input.cb-camp').each(function() {
+        if (this.checked) {
+            campList.push(this.value);
+        }
+    });
+    
+    let profList = [];
+    $('input.cb-prof').each(function() {
+        if (this.checked) {
+            profList.push(this.value);
+        }
+    });
+    profList.push("com"); // always include common skills (basically just Resurrection Signet + PvE-Only skills)
+
+    let includePveOnly = $('input#cb-pveonly').is(':checked');
+    let includeElite = $('input#cb-elite').is(':checked');
+    
+    let whitelist = $('textarea#gen-whitelist').val().split('\n').map(str => str.trim()).filter(str => str.length > 0).map(lookupSkillId);
+    let blacklist = $('textarea#gen-blacklist').val().split('\n').map(str => str.trim()).filter(str => str.length > 0).map(lookupSkillId);
+    
+    return {
+        'camp': campList,
+        'prof': profList,
+        'attr': [], // unimplemented for now
+        'includePveOnly': includePveOnly,
+        'includeElites': includeElite,
+        'whitelist': whitelist,
+        'blacklist': blacklist,
+    };
+}

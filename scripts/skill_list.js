@@ -40,6 +40,17 @@ function getIconUrl(skill) {
     return SKILL_URL_BASE + SKILL_URL_ICON + skill.icon;
 }
 
+function lookupSkillId(name) {
+    for (let i = 0; i < SKILL_MASTER_COUNT; i++) {
+        let skill = SKILL_MASTER_LIST[i];
+        if (name == skill.name) {
+            return i;
+        }
+    }
+    console.error("Couldn't find skill id for skill name: " + name);
+    return null;
+}
+
 const SKILL_MASTER_COUNT = 1318; // length of SKILL_MASTER_LIST
 
 const SKILL_MASTER_LIST = [
