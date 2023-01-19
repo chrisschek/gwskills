@@ -47,7 +47,7 @@ function lookupSkillId(name) {
             return i;
         }
     }
-    console.error("Couldn't find skill id for skill name: " + name);
+    console.log("Couldn't find skill id for skill name: " + name);
     return null;
 }
 
