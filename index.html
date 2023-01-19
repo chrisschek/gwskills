@@ -21,7 +21,6 @@
 
         <div id="generator-outer-container">
 
-            <!-- <div id="intro" style="margin: 8vh 24vw 30px;"> -->
             <div id="intro" style="padding:0px 4ch 2em;">
                 <div style="display:flex;flex-direction:row;">
                     <img src="static/gw-helmet.png" id="title-icon"/>
@@ -128,43 +127,34 @@
                     </span>
                 </div>
 
-                <!-- <div id="gen-autoinclude-container">
-                    <h4 style="margin-bottom:0.6em;">Whitelisted Skills</h4>
-                    <div style="font-size:small;margin-bottom:1em;">These skills will be guaranteed to show up in the deck. Write a single skill name per line, and use exact punctuation and capitalization.</div>
-                    <textarea id="gen-autoinclude" class="ta-skill-list" placeholder="Type skill names here"></textarea>
-                </div>
-
-                <div id="gen-autoexclude-container">
-                    <h4 style="margin-bottom:0.6em;">Blacklisted Skills</h4>
-                    <div style="font-size:small;margin-bottom:1em;">These skills will not show up in the deck. Write a single skill name per line, and use exact punctuation and capitalization.</div>
-                    <textarea id="gen-autoexclude" class="ta-skill-list" placeholder="Type skill names here"></textarea>
-                </div> -->
-
                 <div id="gen-whitelist-blacklist-container">
-                    <h4 style="margin-bottom:0.6em;">Whitelist & Blacklist</h4>
-                    <div style="font-size:small;margin-bottom:1em;">Whitelisted skills (left) are guaranteed to show up in the deck, while blacklisted skills (right) are guaranteed not to. Write a single skill name per line, and use exact punctuation and capitalization.</div>
-                    <!-- <div style="display:grid;column-count:2;column-gap:15px;"> -->
+                    <h4 style="margin-bottom:0.6em;">Whitelisted & Blacklisted Skills</h4>
+                    <div style="font-size:small;margin-bottom:1em;">Whitelisted skills are guaranteed to show up in the deck, while blacklisted skills will never be added to the deck. Write a single skill name per line, and use exact punctuation and capitalization.</div>
                     <div style="display:grid;column-gap:20px;grid-template-columns: auto auto;">
-                        <textarea id="gen-whitelist" class="ta-skill-list" placeholder="Type whitelisted skill names here" style="grid-column:1;"></textarea>
-                        <textarea id="gen-blacklist" class="ta-skill-list" placeholder="Type blacklisted skill names here" style="grid-column:2;"></textarea>
+                        <div>
+                            <h5 style="margin:0 0 0.3em">Whitelisted Skills</h5>
+                            <textarea id="gen-whitelist" class="ta-skill-list" placeholder="Type whitelisted skill names here" style="grid-column:1;"></textarea>
+                        </div>
+                        <div>
+                            <h5 style="margin:0 0 0.3em">Blacklisted Skills</h5>
+                            <textarea id="gen-blacklist" class="ta-skill-list" placeholder="Type blacklisted skill names here" style="grid-column:2;"></textarea>
+                        </div>
                     </div>
                 </div>
 
                 <div id="gen-slider-container">
-                    <h4 style="margin-bottom:0.6em;">Deck Size</h4>
-                    <span style="margin-right:2ch;">Number of skills:</span>
-                    <span style="font-family:monospace;font-size:large;">0%</span>
-                    <span>
-                        <input type="range" min="0" max="100" value="30" style="width:200px" id="skillcount-slider"/>
-                    </span>
-                    <span style="font-family:monospace;font-size:large;">100%</span>
-                    <span style="margin-left:2ch;margin-right:1ch;">Selected:</span>
-                    <span style="font-family:monospace;font-size:large;", id="skillcount-slider-selected-number">uninitialized</span>
+                    <h4>Deck Size</h4>
+                    <div style="margin-top:0.6em;display:flex;flex-direction:right;font-size:small;">
+                        <span style="margin-right:2ch;">Number of skills:</span>
+                        <span style="font-family:monospace;font-size:larger;">0%</span>
+                        <input type="range" min="0" max="100" value="30" style="width:200px;margin:-2px 1ch 0px;" id="skillcount-slider"/>
+                        <span style="font-family:monospace;font-size:larger;">100%</span>
+                        <span style="margin-left:2ch;margin-right:1ch;">Selected:</span>
+                        <span style="font-family:monospace;font-size:larger", id="skillcount-slider-selected-number">uninitialized</span>
+                    </div>
                 </div>
 
-                <!-- <div id="gen-button-container" style="display:flex;justify-content:right;"> -->
-                    <button id="generate">Generate Sealed Deck</button>
-                <!-- </div> -->
+                <button id="generate">Generate Sealed Deck</button>
             </div>
         </div>
 
