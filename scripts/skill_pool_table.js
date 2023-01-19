@@ -94,7 +94,7 @@ function createIconCell(skill) {
 function createNameCell(skill) {
     var name = skill.name;
     var href = getWikiUrl(skill);
-    var link = $('<a/>').html(name).attr('href', href).addClass('skill-name');
+    var link = $('<a/>').html(name).attr('href', href).attr('target', '_blank').attr('rel', 'noopener noreferrer').addClass('skill-name');
     return $('<td/>').html(link).addClass('skills-table-cell');
 }
 

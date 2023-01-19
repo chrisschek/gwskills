@@ -38,3 +38,11 @@ Signet of Spirits
 Mistrust
 Wandering Eye
 ```
+
+### TODO
+
+* implement pve-only skill option
+* implement elite skill option
+* make deck size selector more granular
+* add option to include/exclude skills by attribute
+* add versioning to deck codes? prolly never needed tho
