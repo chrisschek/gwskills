@@ -32,6 +32,10 @@ function generateRandomSkillIdList(options) {
             return false;
         } else if (!options.prof.includes(skill.prof)) {
             return false;
+        } else if (!options.includePveOnly && skill.pve) {
+            return false;
+        } else if (!options.includeElites && skill.desc.startsWith("Elite")) {
+            return false;
         } else {
             return true;
         }
@@ -136,7 +140,7 @@ function readOptionInputs() {
     profList.push("com"); // always include common skills (basically just Resurrection Signet + PvE-Only skills)
 
     let includePveOnly = $('input#cb-pveonly').is(':checked');
-    let includeElite = $('input#cb-elite').is(':checked');
+    let includeElites = $('input#cb-elite').is(':checked');
     
     let getSkillNamesFromTextArea = textArea => $(textArea).val().split('\n').map(str => str.trim()).filter(str => str.length > 0);
     let whitelistNames = getSkillNamesFromTextArea('textarea#gen-whitelist');
@@ -165,7 +169,7 @@ function readOptionInputs() {
         'camp': campList,
         'prof': profList,
         'includePveOnly': includePveOnly,
-        'includeElites': includeElite,
+        'includeElites': includeElites,
         'whitelist': whitelist,
         'blacklist': blacklist,
         'deckSize' : deckSize,
